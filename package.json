@@ -12,6 +12,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write --parser typescript 'src/**/*.ts' && ESLINT_MODE=fix eslint --fix 'src/**/*.ts'",
+    "lint": "ESLINT_MODE=lint eslint 'src/**/*.ts' && prettier --check --parser typescript 'src/**/*.ts'",
     "build": "tsup"
   },
   "keywords": [],
@@ -22,7 +24,11 @@
     "commander": "^14.0.0"
   },
   "devDependencies": {
+    "@alextheman/eslint-config-typescript-base": "^1.0.11",
+    "@types/eslint": "^9.6.1",
     "@types/node": "^24.0.15",
+    "eslint": "^9.31.0",
+    "prettier": "^3.6.2",
     "tsup": "^8.5.0",
     "typescript": "^5.8.3"
   }

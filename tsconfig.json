@@ -3,7 +3,7 @@
     "target": "ES6",
     "useDefineForClassFields": true,
     "lib": ["ES2024"],
-    "types": ["node"],
+    "types": ["eslint", "node"],
     "module": "ESNext",
     "skipLibCheck": true,
     "baseUrl": ".",
