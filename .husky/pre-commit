@@ -1,0 +1,12 @@
+#!/bin/bash
+set -e
+
+if git diff --cached --quiet; then
+  echo "No staged changes found."
+  exit 1
+fi
+
+npm run format
+npm run lint
+
+git update-index --again

@@ -14,7 +14,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "format": "prettier --write --parser typescript 'src/**/*.ts' && ESLINT_MODE=fix eslint --fix 'src/**/*.ts'",
     "lint": "ESLINT_MODE=lint eslint 'src/**/*.ts' && prettier --check --parser typescript 'src/**/*.ts'",
-    "build": "tsup"
+    "build": "tsup",
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "",
@@ -28,6 +29,7 @@
     "@types/eslint": "^9.6.1",
     "@types/node": "^24.0.15",
     "eslint": "^9.31.0",
+    "husky": "^9.1.7",
     "prettier": "^3.6.2",
     "tsup": "^8.5.0",
     "typescript": "^5.8.3"
