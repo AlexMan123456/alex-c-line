@@ -3,7 +3,7 @@
     "target": "ES6",
     "useDefineForClassFields": true,
     "lib": ["ES2024"],
-    "types": ["eslint", "node"],
+    "types": ["eslint", "node", "jest"],
     "module": "ESNext",
     "skipLibCheck": true,
     "baseUrl": ".",
@@ -23,5 +23,5 @@
     "noFallthroughCasesInSwitch": true,
     "declaration": true
   },
-  "include": ["src", "__tests__", "create-rule.ts"]
+  "include": ["src", "__tests__"]
 }
