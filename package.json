@@ -15,6 +15,7 @@
     "format": "prettier --write --parser typescript 'src/**/*.ts' && ESLINT_MODE=fix eslint --fix 'src/**/*.ts'",
     "lint": "ESLINT_MODE=lint eslint 'src/**/*.ts' && prettier --check --parser typescript 'src/**/*.ts'",
     "build": "tsup",
+    "command": "npm run build && npx alex-c-line",
     "prepare": "husky"
   },
   "keywords": [],
