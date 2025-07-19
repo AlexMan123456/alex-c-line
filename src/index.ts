@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 import { Command } from "commander";
-import { loadCommands } from "src/commands/test-command";
+import loadCommands from "src/commands";
+
 const program = new Command();
 program
-  .name("typescript-cli-tool")
-  .description("A powerful CLI tool built with TypeScript")
+  .name("alex-c-line")
+  .description("CLI tool built by Alex")
   .version("1.0.0");
 
 loadCommands(program);

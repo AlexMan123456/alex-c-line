@@ -1,5 +1,6 @@
 import { Command } from "commander";
-export function loadCommands(program: Command) {
+
+function testCommand(program: Command) {
   program
     .command("test-command")
     .description("Quick test command")
@@ -7,3 +8,5 @@ export function loadCommands(program: Command) {
       console.log("Success!");
     });
 }
+
+export default testCommand;
