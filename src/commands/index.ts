@@ -1,8 +1,8 @@
 import { Command } from "commander";
-import testCommand from "src/commands/test-command";
+import sayHello from "src/commands/say-hello";
 
 function loadCommands(program: Command) {
-  testCommand(program);
+  sayHello(program);
 }
 
 export default loadCommands;
