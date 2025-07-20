@@ -8,5 +8,6 @@ fi
 
 npm run format
 npm run lint
+npm test
 
 git update-index --again

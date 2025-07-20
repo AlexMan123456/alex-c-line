@@ -11,9 +11,10 @@
     "alex-c-line": "dist/index.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "format": "prettier --write --parser typescript 'src/**/*.ts' && ESLINT_MODE=fix eslint --fix 'src/**/*.ts'",
-    "lint": "ESLINT_MODE=lint eslint 'src/**/*.ts' && prettier --check --parser typescript 'src/**/*.ts'",
+    "test": "vitest run",
+    "test-watch": "vitest",
+    "format": "prettier --write --parser typescript 'src/**/*.ts' 'tests/**/*.ts' && ESLINT_MODE=fix eslint --fix 'src/**/*.ts' 'tests/**/*.ts'",
+    "lint": "ESLINT_MODE=lint eslint 'src/**/*.ts' 'tests/**/*.ts' && prettier --check --parser typescript 'src/**/*.ts' 'tests/**/*.ts'",
     "build": "tsup",
     "command": "npm run build && echo && echo \"Command output:\" && npx alex-c-line",
     "prepare": "husky"
@@ -23,7 +24,8 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "commander": "^14.0.0"
+    "commander": "^14.0.0",
+    "execa": "^9.6.0"
   },
   "devDependencies": {
     "@alextheman/eslint-config-typescript-base": "^1.0.11",
@@ -32,7 +34,9 @@
     "eslint": "^9.31.0",
     "husky": "^9.1.7",
     "prettier": "^3.6.2",
+    "ts-node": "^10.9.2",
     "tsup": "^8.5.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
   }
 }
