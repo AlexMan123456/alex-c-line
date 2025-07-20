@@ -1,4 +1,4 @@
-import alexCLineTestClient from "tests/alex-c-line-test-client";
+import alexCLineTestClient from "tests/test-utilities/alex-c-line-test-client";
 import { describe, expect, test } from "vitest";
 
 describe("say-hello", () => {
