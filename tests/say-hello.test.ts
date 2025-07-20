@@ -1,9 +1,9 @@
-import { execa } from "execa";
+import alexCLineTestClient from "tests/alex-c-line-test-client";
 import { describe, expect, test } from "vitest";
 
 describe("say-hello", () => {
   test("Prints a message to the console", async () => {
-    const { stdout: output } = await execa`npx alex-c-line say-hello`;
+    const { stdout: output } = await alexCLineTestClient("say-hello");
     expect(output).toBe("Hello!");
   });
 });
