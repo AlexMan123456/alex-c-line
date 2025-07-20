@@ -17,7 +17,10 @@
     "lint": "ESLINT_MODE=lint eslint 'src/**/*.ts' 'tests/**/*.ts' && prettier --check --parser typescript 'src/**/*.ts' 'tests/**/*.ts'",
     "build": "tsup",
     "command": "npm run build && echo && echo \"Command output:\" && npx alex-c-line",
-    "prepare": "husky"
+    "prepare": "husky",
+    "change-major": "npm version major -m \"Change version number to v%s\"",
+    "change-minor": "npm version minor -m \"Change version number to v%s\"",
+    "change-patch": "npm version patch -m \"Change version number to v%s\""
   },
   "keywords": [],
   "author": "",
