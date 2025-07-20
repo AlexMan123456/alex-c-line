@@ -19,7 +19,10 @@ function checkLockfileVersionDiscrepancy(program: Command) {
         readFileSync(path.resolve(process.cwd(), "package-lock.json"), "utf-8"),
       );
       if (packageVersion !== packageLockVersion) {
-        // deal with this later
+        console.error(
+          "❌ ERROR: package.json and package-lock.json out of sync. Please run `npm install` to fix this.",
+        );
+        process.exitCode = 1;
         return;
       }
       console.log("package.json and package-lock.json versions in sync.");
