@@ -1,0 +1,70 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Node.js CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  ci:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [22.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - name: Setup package
+      run: |
+        npm ci
+        npm run build --if-present
+        git fetch --unshallow origin main
+
+    - name: Check version number
+      run: |
+        newPackageVersion=$(jq -r '.version' package.json)
+        newLockVersion=$(jq -r '.version' package-lock.json)
+
+        if [[ "$newPackageVersion" != "$newLockVersion" ]]; then
+          echo "❌ package.json and package-lock.json out of sync. Please run \`npm install\` to fix this."
+          exit 1
+        fi
+
+        echo "Checking for source code changes..."
+        if git diff origin/main...HEAD --quiet "src/*"; then
+          echo "No source code changes found. Version does not need changing."
+          exit 0
+        fi
+
+        oldPackageVersion=$(git show origin/main:package.json | jq -r '.version')
+
+        if [[ "$oldPackageVersion" == "$newPackageVersion" ]]; then
+          IFS='.' read -r major minor patch <<< "$oldPackageVersion"
+          newMajorPackageVersion="$((major + 1)).0.0"
+          newMinorPackageVersion="$major.$((minor + 1)).0"
+          newPatchPackageVersion="$major.$minor.$((patch + 1))"
+
+          echo "❌ Version needs updating. Please run one of the following:"
+          echo "- \`npm run change-major\` (v$oldPackageVersion -> v$newMajorPackageVersion)"
+          echo "- \`npm run change-minor\` (v$oldPackageVersion -> v$newMinorPackageVersion)"
+          echo "- \`npm run change-patch\` (v$oldPackageVersion -> v$newPatchPackageVersion)"
+          exit 1
+        fi
+
+        echo "Version has been updated."
+    - name: Run tests
+      run: npm test
+    - name: Run linting checks
+      run: npm run lint
