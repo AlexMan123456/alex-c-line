@@ -1,4 +1,5 @@
 import { execa } from "execa";
+import { describe, expect, test } from "vitest";
 
 describe("say-hello", () => {
   test("Prints a message to the console", async () => {
