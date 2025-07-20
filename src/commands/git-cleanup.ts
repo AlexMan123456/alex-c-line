@@ -12,9 +12,11 @@ function gitCleanup(program: Command) {
         process.exitCode = 1;
         return;
       }
-      await execa`git checkout main`;
-      await execa`git pull origin main`;
-      await execa`git branch --delete ${currentBranch}`;
+      await execa("git", ["checkout", "main"], { stdio: "inherit" });
+      await execa("git", ["pull", "origin", "main"], { stdio: "inherit" });
+      await execa("git", ["branch", "--delete", currentBranch], {
+        stdio: "inherit",
+      });
     });
 }
 
