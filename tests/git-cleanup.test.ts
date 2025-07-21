@@ -1,13 +1,13 @@
 import { execa, ExecaError } from "execa";
 import { readFile, writeFile } from "fs/promises";
 import { temporaryDirectoryTask } from "tempy";
-import alexCLineTestClient from "tests/test-utilities/alex-c-line-test-client";
+import alexCLineTestClient from "tests/test-clients/alex-c-line-test-client";
 import {
   mergeChangesIntoMain,
   rebaseChangesOntoMain,
   setupOrigin,
   setupRepository,
-} from "tests/test-utilities/git-testing-utilities";
+} from "tests/test-clients/git-testing-utilities";
 import { describe, expect, test } from "vitest";
 
 describe("git-cleanup", () => {

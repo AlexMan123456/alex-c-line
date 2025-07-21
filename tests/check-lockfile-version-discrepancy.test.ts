@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 import { temporaryDirectoryTask } from "tempy";
 import path from "path";
 import { writeFile } from "fs/promises";
-import alexCLineTestClient from "tests/test-utilities/alex-c-line-test-client";
+import alexCLineTestClient from "tests/test-clients/alex-c-line-test-client";
 import { ExecaError } from "execa";
 
 describe("check-lockfile-version-discrepancy", () => {
