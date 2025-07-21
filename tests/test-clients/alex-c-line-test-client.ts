@@ -6,16 +6,30 @@ interface Options {
 }
 
 async function alexCLineTestClient(
-  command: string | string[],
+  command: string,
+  args?: string[],
   options?: Options,
 ) {
   const localDistDirectory = path.resolve(process.cwd(), "dist");
-  const commandArray = Array.isArray(command) ? command : [command];
+  const newArguments = args ?? [];
   return await execa(
     "node",
-    [path.join(localDistDirectory, "index.js"), ...commandArray],
+    [path.join(localDistDirectory, "index.js"), command, ...newArguments],
     options,
   );
+}
+
+export function createAlexCLineTestClientInDirectory(directory: string) {
+  return async (
+    command: string,
+    args?: string[],
+    options?: Omit<Options, "cwd">,
+  ) => {
+    return await alexCLineTestClient(command, args, {
+      ...options,
+      cwd: directory,
+    });
+  };
 }
 
 export default alexCLineTestClient;

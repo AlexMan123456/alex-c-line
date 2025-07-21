@@ -22,6 +22,7 @@ describe("check-lockfile-version-discrepancy", () => {
 
       const { stdout: output, exitCode } = await alexCLineTestClient(
         "check-lockfile-version-discrepancy",
+        undefined,
         {
           cwd: tempDirectory,
         },
@@ -47,9 +48,13 @@ describe("check-lockfile-version-discrepancy", () => {
       );
 
       try {
-        await alexCLineTestClient("check-lockfile-version-discrepancy", {
-          cwd: tempDirectory,
-        });
+        await alexCLineTestClient(
+          "check-lockfile-version-discrepancy",
+          undefined,
+          {
+            cwd: tempDirectory,
+          },
+        );
         throw new Error("TEST_FAILED");
       } catch (error: unknown) {
         if (error instanceof ExecaError) {

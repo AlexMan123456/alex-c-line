@@ -1,8 +1,9 @@
 import { execa, ExecaError } from "execa";
 import { readFile, writeFile } from "fs/promises";
 import { temporaryDirectoryTask } from "tempy";
-import alexCLineTestClient from "tests/test-clients/alex-c-line-test-client";
+import { createAlexCLineTestClientInDirectory } from "tests/test-clients/alex-c-line-test-client";
 import {
+  createGitTestClient,
   mergeChangesIntoMain,
   rebaseChangesOntoMain,
   setupOrigin,
@@ -20,23 +21,23 @@ describe("git-cleanup", () => {
         originDirectory,
         "test-file.js",
       );
+      const fileContentsBefore = await readFile(testFilePath, "utf-8");
+      expect(fileContentsBefore).toBe("");
 
-      // Setup an actual test file
-      await execa("git", ["checkout", "-b", "test-branch"], {
-        cwd: testRepository,
-      });
+      const gitTestClient = createGitTestClient(testRepository);
+      const alexCLineTestClient =
+        createAlexCLineTestClientInDirectory(testRepository);
+
+      // Setup test file
+      await gitTestClient("git", ["checkout", "-b", "test-branch"]);
       await writeFile(testFilePath, 'console.log("This is a test");');
-      await execa("git", ["add", "test-file.js"], { cwd: testRepository });
-      await execa("git", ["commit", "-m", "This is a test"], {
-        cwd: testRepository,
-      });
-      await execa("git", ["push", "origin", "test-branch"], {
-        cwd: testRepository,
-      });
+      await gitTestClient("git", ["add", "test-file.js"]);
+      await gitTestClient("git", ["commit", "-m", "This is a test"]);
+      await gitTestClient("git", ["push", "origin", "test-branch"]);
 
       await mergeChangesIntoMain(testRepository, "test-branch");
 
-      await alexCLineTestClient("git-cleanup", { cwd: testRepository });
+      await alexCLineTestClient("git-cleanup");
       const fileContentsAfter = await readFile(testFilePath, "utf-8");
       expect(fileContentsAfter).toBe('console.log("This is a test");');
       const { stdout: branches } = await execa("git", ["branch"], {
@@ -55,8 +56,11 @@ describe("git-cleanup", () => {
         "test-file.js",
       );
 
+      const alexCLineTestClient =
+        createAlexCLineTestClientInDirectory(testRepository);
+
       try {
-        await alexCLineTestClient("git-cleanup", { cwd: testRepository });
+        await alexCLineTestClient("git-cleanup");
         throw new Error("TEST_FAILED");
       } catch (error: unknown) {
         if (error instanceof ExecaError) {
@@ -79,28 +83,24 @@ describe("git-cleanup", () => {
         originDirectory,
         "test-file.js",
       );
+      const fileContentsBefore = await readFile(testFilePath, "utf-8");
+      expect(fileContentsBefore).toBe("");
+
+      const gitTestClient = createGitTestClient(testRepository);
+      const alexCLineTestClient =
+        createAlexCLineTestClientInDirectory(testRepository);
 
       // Setup an actual test file
-      await execa("git", ["checkout", "-b", "test-branch"], {
-        cwd: testRepository,
-      });
+      await gitTestClient("git", ["checkout", "-b", "test-branch"]);
       await writeFile(testFilePath, 'console.log("This is a test");');
-      await execa("git", ["add", "test-file.js"], { cwd: testRepository });
-      await execa("git", ["commit", "-m", "This is a test"], {
-        cwd: testRepository,
-      });
-      await execa("git", ["push", "origin", "test-branch"], {
-        cwd: testRepository,
-      });
+      await gitTestClient("git", ["add", "test-file.js"]);
+      await gitTestClient("git", ["commit", "-m", "This is a test"]);
+      await gitTestClient("git", ["push", "origin", "test-branch"]);
 
       await rebaseChangesOntoMain(testRepository, "test-branch");
 
-      await alexCLineTestClient(["git-cleanup", "--rebase"], {
-        cwd: testRepository,
-      });
-      const { stdout: branches } = await execa("git", ["branch"], {
-        cwd: testRepository,
-      });
+      await alexCLineTestClient("git-cleanup", ["--rebase"]);
+      const { stdout: branches } = await gitTestClient("git", ["branch"]);
       expect(branches).not.toContain("test-branch");
       const fileContentsAfter = await readFile(testFilePath, "utf-8");
       expect(fileContentsAfter).toBe('console.log("This is a test");');
@@ -115,19 +115,17 @@ describe("git-cleanup", () => {
         "test-file.js",
       );
 
-      await execa("git", ["checkout", "-b", "test-branch"], {
-        cwd: testRepository,
-      });
+      const gitTestClient = createGitTestClient(testRepository);
+      const alexCLineTestClient =
+        createAlexCLineTestClientInDirectory(testRepository);
+
+      await gitTestClient("git", ["checkout", "-b", "test-branch"]);
       await writeFile(testFilePath, 'console.log("This is a test");');
-      await execa("git", ["add", "test-file.js"], { cwd: testRepository });
-      await execa("git", ["commit", "-m", "This is a test"], {
-        cwd: testRepository,
-      });
+      await gitTestClient("git", ["add", "test-file.js"]);
+      await gitTestClient("git", ["commit", "-m", "This is a test"]);
 
       try {
-        await alexCLineTestClient(["git-cleanup", "--rebase"], {
-          cwd: testRepository,
-        });
+        await alexCLineTestClient("git-cleanup", ["--rebase"]);
         throw new Error("TEST_FAILED");
       } catch (error: unknown) {
         if (error instanceof ExecaError) {
@@ -152,20 +150,18 @@ describe("git-cleanup", () => {
         "test-file.js",
       );
 
-      await execa("git", ["checkout", "-b", "test-branch"], {
-        cwd: testRepository,
-      });
+      const gitTestClient = createGitTestClient(testRepository);
+      const alexCLineTestClient =
+        createAlexCLineTestClientInDirectory(testRepository);
+
+      await gitTestClient("git", ["checkout", "-b", "test-branch"]);
       await writeFile(testFilePath, 'console.log("This is a test");');
-      await execa("git", ["add", "test-file.js"], { cwd: testRepository });
-      await execa("git", ["commit", "-m", "This is a test"], {
-        cwd: testRepository,
-      });
-      await execa("git", ["push", "origin", "test-branch"], {
-        cwd: testRepository,
-      });
+      await gitTestClient("git", ["add", "test-file.js"]);
+      await gitTestClient("git", ["commit", "-m", "This is a test"]);
+      await gitTestClient("git", ["push", "origin", "test-branch"]);
 
       try {
-        await alexCLineTestClient(["git-cleanup", "--rebase"], {
+        await alexCLineTestClient("git-cleanup", ["--rebase"], {
           cwd: testRepository,
         });
         throw new Error("TEST_FAILED");
@@ -193,22 +189,18 @@ describe("git-cleanup", () => {
         "test-file.js",
       );
 
-      await execa("git", ["checkout", "-b", "test-branch"], {
-        cwd: testRepository,
-      });
+      const gitTestClient = createGitTestClient(testRepository);
+      const alexCLineTestClient =
+        createAlexCLineTestClientInDirectory(testRepository);
+
+      await gitTestClient("git", ["checkout", "-b", "test-branch"]);
       await writeFile(testFilePath, 'console.log("This is a test");');
-      await execa("git", ["add", "test-file.js"], { cwd: testRepository });
-      await execa("git", ["commit", "-m", "This is a test"], {
-        cwd: testRepository,
-      });
-      await execa("git", ["push", "origin", "test-branch"], {
-        cwd: testRepository,
-      });
+      await gitTestClient("git", ["add", "test-file.js"]);
+      await gitTestClient("git", ["commit", "-m", "This is a test"]);
+      await gitTestClient("git", ["push", "origin", "test-branch"]);
 
       await rebaseChangesOntoMain(testRepository, "test-branch");
-      await alexCLineTestClient(["git-cleanup", "--rebase"], {
-        cwd: testRepository,
-      });
+      await alexCLineTestClient("git-cleanup", ["--rebase"]);
       const fileContentsAfter = await readFile(testFilePath, "utf-8");
       expect(fileContentsAfter).toBe('console.log("This is a test");');
       const { stdout: branches } = await execa("git", ["branch"], {

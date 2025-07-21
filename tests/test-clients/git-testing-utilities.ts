@@ -1,7 +1,16 @@
-import { execa } from "execa";
-import { readFile, writeFile } from "fs/promises";
+import { execa, Options } from "execa";
+import { writeFile } from "fs/promises";
 import path from "path";
-import { expect } from "vitest";
+
+export function createGitTestClient(repository: string) {
+  return async (
+    command: string,
+    args?: string[],
+    options?: Omit<Options, "cwd">,
+  ) => {
+    return await execa(command, args, { ...options, cwd: repository });
+  };
+}
 
 export async function setupOrigin(tempDirectory: string) {
   const originDirectory = path.join(tempDirectory, "origin.git");
@@ -16,20 +25,15 @@ export async function setupRepository(
 ) {
   await execa("mkdir", ["test-repository"], { cwd: tempDirectory });
   const testRepository = path.resolve(tempDirectory, "test-repository");
-  await execa("git", ["init"], { cwd: testRepository });
-  await execa("git", ["checkout", "-b", "main"], { cwd: testRepository });
-  await execa("git", ["remote", "add", "origin", originDirectory], {
-    cwd: testRepository,
-  });
+  const gitTestClient = createGitTestClient(testRepository);
+  await gitTestClient("git", ["init"]);
+  await gitTestClient("git", ["checkout", "-b", "main"]);
+  await gitTestClient("git", ["remote", "add", "origin", originDirectory]);
   const testFilePath = path.join(testRepository, testFileName);
   await writeFile(testFilePath, "");
-  const fileContentsBefore = await readFile(testFilePath, "utf-8");
-  expect(fileContentsBefore).toBe("");
-  await execa("git", ["add", "."], { cwd: testRepository });
-  await execa("git", ["commit", "-m", "Initial commit"], {
-    cwd: testRepository,
-  });
-  await execa("git", ["push", "origin", "main"], { cwd: testRepository });
+  await gitTestClient("git", ["add", "."]);
+  await gitTestClient("git", ["commit", "-m", "Initial commit"]);
+  await gitTestClient("git", ["push", "origin", "main"]);
   return { testRepository, testFilePath };
 }
 
@@ -37,37 +41,33 @@ export async function mergeChangesIntoMain(
   testRepository: string,
   branchName: string,
 ) {
-  await execa("git", ["checkout", "main"], { cwd: testRepository });
-  await execa(
-    "git",
-    ["merge", branchName, "--no-ff", "-m", "Merge into main"],
-    { cwd: testRepository },
-  );
-  await execa("git", ["push", "origin", "main"], { cwd: testRepository });
-  await execa("git", ["push", "origin", "--delete", branchName], {
-    cwd: testRepository,
-  });
-  await execa("git", ["checkout", branchName], { cwd: testRepository });
+  const gitTestClient = createGitTestClient(testRepository);
+  await gitTestClient("git", ["checkout", "main"]);
+  await gitTestClient("git", [
+    "merge",
+    branchName,
+    "--no-ff",
+    "-m",
+    "Merge into main",
+  ]);
+  await gitTestClient("git", ["push", "origin", "main"]);
+  await gitTestClient("git", ["push", "origin", "--delete", branchName]);
+  await gitTestClient("git", ["checkout", branchName]);
 }
 
 export async function rebaseChangesOntoMain(
   testRepository: string,
   branchName: string,
 ) {
-  await execa("git", ["checkout", "main"], { cwd: testRepository });
-  await execa("git", ["pull", "origin", "main"], { cwd: testRepository });
-  await execa("git", ["checkout", branchName], { cwd: testRepository });
-  await execa("git", ["rebase", "main"], { cwd: testRepository });
-  await execa("git", ["push", "--force", "origin", branchName], {
-    cwd: testRepository,
-  });
-  await execa("git", ["checkout", "main"], { cwd: testRepository });
-  await execa("git", ["merge", "--ff-only", branchName], {
-    cwd: testRepository,
-  });
-  await execa("git", ["push", "origin", "main"], { cwd: testRepository });
-  await execa("git", ["push", "origin", "--delete", branchName], {
-    cwd: testRepository,
-  });
-  await execa("git", ["checkout", branchName], { cwd: testRepository });
+  const gitTestClient = createGitTestClient(testRepository);
+  await gitTestClient("git", ["checkout", "main"]);
+  await gitTestClient("git", ["pull", "origin", "main"]);
+  await gitTestClient("git", ["checkout", branchName]);
+  await gitTestClient("git", ["rebase", "main"]);
+  await gitTestClient("git", ["push", "--force", "origin", branchName]);
+  await gitTestClient("git", ["checkout", "main"]);
+  await gitTestClient("git", ["merge", "--ff-only", branchName]);
+  await gitTestClient("git", ["push", "origin", "main"]);
+  await gitTestClient("git", ["push", "origin", "--delete", branchName]);
+  await gitTestClient("git", ["checkout", branchName]);
 }
