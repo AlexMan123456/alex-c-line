@@ -44,5 +44,30 @@ export async function mergeChangesIntoMain(
     { cwd: testRepository },
   );
   await execa("git", ["push", "origin", "main"], { cwd: testRepository });
+  await execa("git", ["push", "origin", "--delete", branchName], {
+    cwd: testRepository,
+  });
+  await execa("git", ["checkout", branchName], { cwd: testRepository });
+}
+
+export async function rebaseChangesOntoMain(
+  testRepository: string,
+  branchName: string,
+) {
+  await execa("git", ["checkout", "main"], { cwd: testRepository });
+  await execa("git", ["pull", "origin", "main"], { cwd: testRepository });
+  await execa("git", ["checkout", branchName], { cwd: testRepository });
+  await execa("git", ["rebase", "main"], { cwd: testRepository });
+  await execa("git", ["push", "--force", "origin", branchName], {
+    cwd: testRepository,
+  });
+  await execa("git", ["checkout", "main"], { cwd: testRepository });
+  await execa("git", ["merge", "--ff-only", branchName], {
+    cwd: testRepository,
+  });
+  await execa("git", ["push", "origin", "main"], { cwd: testRepository });
+  await execa("git", ["push", "origin", "--delete", branchName], {
+    cwd: testRepository,
+  });
   await execa("git", ["checkout", branchName], { cwd: testRepository });
 }
