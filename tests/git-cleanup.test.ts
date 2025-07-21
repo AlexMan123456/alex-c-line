@@ -1,5 +1,6 @@
 import { execa, ExecaError } from "execa";
 import { readFile, writeFile } from "fs/promises";
+import path from "path";
 import { temporaryDirectoryTask } from "tempy";
 import { createAlexCLineTestClientInDirectory } from "tests/test-clients/alex-c-line-test-client";
 import {
@@ -179,34 +180,67 @@ describe("git-cleanup", () => {
       }
     });
   });
-  // TO DO: Add test for case when someone merges before you in rebase.
-  test.skip("If someone made changes beforehand, still allow the rebase to go through", async () => {
+  test("If someone made changes beforehand, still allow the rebase to go through", async () => {
     await temporaryDirectoryTask(async (tempDirectory) => {
       const originDirectory = await setupOrigin(tempDirectory);
       const { testRepository, testFilePath } = await setupRepository(
         tempDirectory,
         originDirectory,
-        "test-file.js",
+        "test-file-1.js",
       );
 
       const gitTestClient = createGitTestClient(testRepository);
       const alexCLineTestClient =
         createAlexCLineTestClientInDirectory(testRepository);
 
-      await gitTestClient("git", ["checkout", "-b", "test-branch"]);
+      // Create a change on test-branch-1
+      await gitTestClient("git", ["checkout", "-b", "test-branch-1"]);
       await writeFile(testFilePath, 'console.log("This is a test");');
-      await gitTestClient("git", ["add", "test-file.js"]);
+      await gitTestClient("git", ["add", "test-file-1.js"]);
       await gitTestClient("git", ["commit", "-m", "This is a test"]);
-      await gitTestClient("git", ["push", "origin", "test-branch"]);
+      await gitTestClient("git", ["push", "origin", "test-branch-1"]);
 
-      await rebaseChangesOntoMain(testRepository, "test-branch");
+      //  Create a change on test-branch-2
+      await gitTestClient("git", ["checkout", "main"]);
+      await gitTestClient("git", ["checkout", "-b", "test-branch-2"]);
+      const secondTestFilePath = path.join(testRepository, "test-file-2.js");
+      console.log(testFilePath, secondTestFilePath);
+      await writeFile(
+        secondTestFilePath,
+        'console.log("This is another test");',
+      );
+      await gitTestClient("git", ["add", "test-file-2.js"]);
+      await gitTestClient("git", ["commit", "-m", "This is a second test"]);
+      await gitTestClient("git", ["push", "origin", "test-branch-2"]);
+
+      // Rebase and merge changes from test-branch-1
+      await rebaseChangesOntoMain(testRepository, "test-branch-1");
+
+      // Check test-branch-1 has been rebased and merged
       await alexCLineTestClient("git-cleanup", ["--rebase"]);
-      const fileContentsAfter = await readFile(testFilePath, "utf-8");
-      expect(fileContentsAfter).toBe('console.log("This is a test");');
-      const { stdout: branches } = await execa("git", ["branch"], {
-        cwd: testRepository,
-      });
-      expect(branches).not.toContain("test-branch");
+      const fileContentsAfterFirst = await readFile(testFilePath, "utf-8");
+      expect(fileContentsAfterFirst).toBe('console.log("This is a test");');
+      const { stdout: branchesAfterFirst } = await gitTestClient("git", [
+        "branch",
+      ]);
+      expect(branchesAfterFirst).not.toContain("test-branch-1");
+
+      // Rebase and merge changes from
+      await rebaseChangesOntoMain(testRepository, "test-branch-2");
+
+      // Check test-branch-2 has been rebased and merged
+      await alexCLineTestClient("git-cleanup", ["--rebase"]);
+      const fileContentsAfterSecond = await readFile(
+        secondTestFilePath,
+        "utf-8",
+      );
+      expect(fileContentsAfterSecond).toBe(
+        'console.log("This is another test");',
+      );
+      const { stdout: branchesAfterSecond } = await gitTestClient("git", [
+        "branch",
+      ]);
+      expect(branchesAfterSecond).not.toContain("test-branch-2");
     });
   });
 });
