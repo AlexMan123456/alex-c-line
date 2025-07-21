@@ -106,7 +106,44 @@ describe("git-cleanup", () => {
       expect(fileContentsAfter).toBe('console.log("This is a test");');
     });
   });
-  test("If branch has not been deleted remotely on rebase, throw an error", async () => {
+  test("If current branch differs from main on rebase, throw an error", async () => {
+    await temporaryDirectoryTask(async (tempDirectory) => {
+      const originDirectory = await setupOrigin(tempDirectory);
+      const { testRepository, testFilePath } = await setupRepository(
+        tempDirectory,
+        originDirectory,
+        "test-file.js",
+      );
+
+      await execa("git", ["checkout", "-b", "test-branch"], {
+        cwd: testRepository,
+      });
+      await writeFile(testFilePath, 'console.log("This is a test");');
+      await execa("git", ["add", "test-file.js"], { cwd: testRepository });
+      await execa("git", ["commit", "-m", "This is a test"], {
+        cwd: testRepository,
+      });
+
+      try {
+        await alexCLineTestClient(["git-cleanup", "--rebase"], {
+          cwd: testRepository,
+        });
+        throw new Error("TEST_FAILED");
+      } catch (error: unknown) {
+        if (error instanceof ExecaError) {
+          const { stderr: errorMessage, exitCode } = error;
+          expect(exitCode).toBe(1);
+          expect(errorMessage).toContain(
+            "❌ ERROR: Changes on branch not fully merged!",
+          );
+          return;
+        } else {
+          throw error;
+        }
+      }
+    });
+  });
+  test("If current branch exists on remote but has not been merged yet, still throw an error", async () => {
     await temporaryDirectoryTask(async (tempDirectory) => {
       const originDirectory = await setupOrigin(tempDirectory);
       const { testRepository, testFilePath } = await setupRepository(
