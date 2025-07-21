@@ -20,9 +20,9 @@ function gitCleanup(program: Command) {
       await execa("git", ["checkout", "main"], { stdio: "inherit" });
       await execa("git", ["pull", "origin", "main"], { stdio: "inherit" });
       if (rebase) {
-        const { stdout: branches } = await execa`git branch -r`;
-        const branchExists = branches.includes(`origin/${currentBranch}`);
-        if (branchExists) {
+        const { stdout: changes } =
+          await execa`git diff main..${currentBranch}`;
+        if (changes) {
           console.error("❌ ERROR: Changes on branch not fully merged!");
           process.exitCode = 1;
           return;
