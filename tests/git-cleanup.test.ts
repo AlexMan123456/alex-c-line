@@ -183,4 +183,38 @@ describe("git-cleanup", () => {
       }
     });
   });
+  // TO DO: Add test for case when someone merges before you in rebase.
+  test.skip("If someone made changes beforehand, still allow the rebase to go through", async () => {
+    await temporaryDirectoryTask(async (tempDirectory) => {
+      const originDirectory = await setupOrigin(tempDirectory);
+      const { testRepository, testFilePath } = await setupRepository(
+        tempDirectory,
+        originDirectory,
+        "test-file.js",
+      );
+
+      await execa("git", ["checkout", "-b", "test-branch"], {
+        cwd: testRepository,
+      });
+      await writeFile(testFilePath, 'console.log("This is a test");');
+      await execa("git", ["add", "test-file.js"], { cwd: testRepository });
+      await execa("git", ["commit", "-m", "This is a test"], {
+        cwd: testRepository,
+      });
+      await execa("git", ["push", "origin", "test-branch"], {
+        cwd: testRepository,
+      });
+
+      await rebaseChangesOntoMain(testRepository, "test-branch");
+      await alexCLineTestClient(["git-cleanup", "--rebase"], {
+        cwd: testRepository,
+      });
+      const fileContentsAfter = await readFile(testFilePath, "utf-8");
+      expect(fileContentsAfter).toBe('console.log("This is a test");');
+      const { stdout: branches } = await execa("git", ["branch"], {
+        cwd: testRepository,
+      });
+      expect(branches).not.toContain("test-branch");
+    });
+  });
 });

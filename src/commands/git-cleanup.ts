@@ -17,6 +17,10 @@ function gitCleanup(program: Command) {
         process.exitCode = 1;
         return;
       }
+      if (rebase) {
+        await execa("git", ["fetch", "origin", "main"], { stdio: "inherit" });
+        await execa("git", ["pull", "origin", "main"], { stdio: "inherit" });
+      }
       await execa("git", ["checkout", "main"], { stdio: "inherit" });
       await execa("git", ["pull", "origin", "main"], { stdio: "inherit" });
       if (rebase) {
