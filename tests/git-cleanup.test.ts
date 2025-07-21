@@ -4,6 +4,7 @@ import { temporaryDirectoryTask } from "tempy";
 import alexCLineTestClient from "tests/test-utilities/alex-c-line-test-client";
 import {
   mergeChangesIntoMain,
+  rebaseChangesOntoMain,
   setupOrigin,
   setupRepository,
 } from "tests/test-utilities/git-testing-utilities";
@@ -56,6 +57,7 @@ describe("git-cleanup", () => {
 
       try {
         await alexCLineTestClient("git-cleanup", { cwd: testRepository });
+        throw new Error("TEST_FAILED");
       } catch (error: unknown) {
         if (error instanceof ExecaError) {
           const { stderr: errorMessage, exitCode } = error;
@@ -63,6 +65,83 @@ describe("git-cleanup", () => {
           expect(errorMessage).toBe(
             "❌ ERROR: Cannot run cleanup on main branch!",
           );
+        } else {
+          throw error;
+        }
+      }
+    });
+  });
+  test("Force-deletes branch in rebase mode", async () => {
+    await temporaryDirectoryTask(async (tempDirectory) => {
+      const originDirectory = await setupOrigin(tempDirectory);
+      const { testRepository, testFilePath } = await setupRepository(
+        tempDirectory,
+        originDirectory,
+        "test-file.js",
+      );
+
+      // Setup an actual test file
+      await execa("git", ["checkout", "-b", "test-branch"], {
+        cwd: testRepository,
+      });
+      await writeFile(testFilePath, 'console.log("This is a test");');
+      await execa("git", ["add", "test-file.js"], { cwd: testRepository });
+      await execa("git", ["commit", "-m", "This is a test"], {
+        cwd: testRepository,
+      });
+      await execa("git", ["push", "origin", "test-branch"], {
+        cwd: testRepository,
+      });
+
+      await rebaseChangesOntoMain(testRepository, "test-branch");
+
+      await alexCLineTestClient(["git-cleanup", "--rebase"], {
+        cwd: testRepository,
+      });
+      const { stdout: branches } = await execa("git", ["branch"], {
+        cwd: testRepository,
+      });
+      expect(branches).not.toContain("test-branch");
+      const fileContentsAfter = await readFile(testFilePath, "utf-8");
+      expect(fileContentsAfter).toBe('console.log("This is a test");');
+    });
+  });
+  test("If branch has not been deleted remotely on rebase, throw an error", async () => {
+    await temporaryDirectoryTask(async (tempDirectory) => {
+      const originDirectory = await setupOrigin(tempDirectory);
+      const { testRepository, testFilePath } = await setupRepository(
+        tempDirectory,
+        originDirectory,
+        "test-file.js",
+      );
+
+      await execa("git", ["checkout", "-b", "test-branch"], {
+        cwd: testRepository,
+      });
+      await writeFile(testFilePath, 'console.log("This is a test");');
+      await execa("git", ["add", "test-file.js"], { cwd: testRepository });
+      await execa("git", ["commit", "-m", "This is a test"], {
+        cwd: testRepository,
+      });
+      await execa("git", ["push", "origin", "test-branch"], {
+        cwd: testRepository,
+      });
+
+      try {
+        await alexCLineTestClient(["git-cleanup", "--rebase"], {
+          cwd: testRepository,
+        });
+        throw new Error("TEST_FAILED");
+      } catch (error: unknown) {
+        if (error instanceof ExecaError) {
+          const { stderr: errorMessage, exitCode } = error;
+          expect(exitCode).toBe(1);
+          expect(errorMessage).toContain(
+            "❌ ERROR: Changes on branch not fully merged!",
+          );
+          return;
+        } else {
+          throw error;
         }
       }
     });
