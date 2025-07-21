@@ -2,7 +2,7 @@ import { describe, expect, test } from "vitest";
 import { temporaryDirectoryTask } from "tempy";
 import path from "path";
 import { writeFile } from "fs/promises";
-import alexCLineTestClient from "tests/test-utilities/alex-c-line-test-client";
+import alexCLineTestClient from "tests/test-clients/alex-c-line-test-client";
 import { ExecaError } from "execa";
 
 describe("check-lockfile-version-discrepancy", () => {
@@ -22,6 +22,7 @@ describe("check-lockfile-version-discrepancy", () => {
 
       const { stdout: output, exitCode } = await alexCLineTestClient(
         "check-lockfile-version-discrepancy",
+        undefined,
         {
           cwd: tempDirectory,
         },
@@ -47,9 +48,13 @@ describe("check-lockfile-version-discrepancy", () => {
       );
 
       try {
-        await alexCLineTestClient("check-lockfile-version-discrepancy", {
-          cwd: tempDirectory,
-        });
+        await alexCLineTestClient(
+          "check-lockfile-version-discrepancy",
+          undefined,
+          {
+            cwd: tempDirectory,
+          },
+        );
         throw new Error("TEST_FAILED");
       } catch (error: unknown) {
         if (error instanceof ExecaError) {
