@@ -1,7 +1,7 @@
-import alexBaseConfig from "@alextheman/eslint-config-typescript-base";
+import plugin from "@alextheman/eslint-plugin";
 
 export default [
-  ...alexBaseConfig,
+  ...plugin.configs.alexTypeScriptBase,
   {
     rules: {
       // Probably not the best idea to give warnings/errors when using the console in a console-based tool now, isn't it?
