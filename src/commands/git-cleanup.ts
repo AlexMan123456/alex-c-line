@@ -1,5 +1,5 @@
 import { Command } from "commander";
-import { execa } from "execa";
+import { execa, ExecaError } from "execa";
 
 interface Options {
   rebase?: boolean;
@@ -28,17 +28,26 @@ function gitCleanup(program: Command) {
           await execa`git diff main..${currentBranch}`;
         if (changes) {
           console.error("❌ ERROR: Changes on branch not fully merged!");
-          process.exitCode = 1;
-          return;
+          await execa`git checkout ${currentBranch}`;
+          process.exit(1);
         }
         await execa("git", ["fetch", "--prune"], { stdio: "inherit" });
         await execa("git", ["branch", "-D", currentBranch], {
           stdio: "inherit",
         });
       } else {
-        await execa("git", ["branch", "--delete", currentBranch], {
-          stdio: "inherit",
-        });
+        try {
+          await execa("git", ["branch", "--delete", currentBranch], {
+            stdio: "inherit",
+          });
+        } catch (error: unknown) {
+          if (error instanceof ExecaError) {
+            console.error("❌ ERROR: Changes on branch not fully merged!");
+            await execa`git checkout ${currentBranch}`;
+            process.exitCode = 1;
+          }
+          throw error;
+        }
       }
     });
 }
