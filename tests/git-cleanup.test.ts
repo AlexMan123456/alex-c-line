@@ -76,6 +76,49 @@ describe("git-cleanup", () => {
       }
     });
   });
+  test("Throw a custom error if branch not fully merged, and go back to current branch", async () => {
+    await temporaryDirectoryTask(async (tempDirectory) => {
+      // Setup
+      const originDirectory = await setupOrigin(tempDirectory);
+      const { testRepository, testFilePath } = await setupRepository(
+        tempDirectory,
+        originDirectory,
+        "test-file.js",
+      );
+      const fileContentsBefore = await readFile(testFilePath, "utf-8");
+      expect(fileContentsBefore).toBe("");
+
+      const gitTestClient = createGitTestClient(testRepository);
+      const alexCLineTestClient =
+        createAlexCLineTestClientInDirectory(testRepository);
+
+      // Setup test file
+      await gitTestClient("git", ["checkout", "-b", "test-branch"]);
+      await writeFile(testFilePath, 'console.log("This is a test");');
+      await gitTestClient("git", ["add", "test-file.js"]);
+      await gitTestClient("git", ["commit", "-m", "This is a test"]);
+
+      try {
+        await alexCLineTestClient("git-cleanup");
+        throw new Error("TEST_FAILED");
+      } catch (error: unknown) {
+        if (error instanceof ExecaError) {
+          const { exitCode, stderr: errorMessage } = error;
+          expect(exitCode).toBe(1);
+          expect(errorMessage).toContain(
+            "❌ ERROR: Changes on branch not fully merged!",
+          );
+          const { stdout: currentBranch } = await gitTestClient("git", [
+            "branch",
+            "--show-current",
+          ]);
+          expect(currentBranch).toBe("test-branch");
+        } else {
+          throw error;
+        }
+      }
+    });
+  });
   test("Force-deletes branch in rebase mode", async () => {
     await temporaryDirectoryTask(async (tempDirectory) => {
       const originDirectory = await setupOrigin(tempDirectory);
@@ -135,14 +178,18 @@ describe("git-cleanup", () => {
           expect(errorMessage).toContain(
             "❌ ERROR: Changes on branch not fully merged!",
           );
-          return;
+          const { stdout: currentBranch } = await gitTestClient("git", [
+            "branch",
+            "--show-current",
+          ]);
+          expect(currentBranch).toBe("test-branch");
         } else {
           throw error;
         }
       }
     });
   });
-  test("If current branch exists on remote but has not been merged yet, still throw an error", async () => {
+  test("If current branch exists on remote but has not been rebase-merged yet, throw an error", async () => {
     await temporaryDirectoryTask(async (tempDirectory) => {
       const originDirectory = await setupOrigin(tempDirectory);
       const { testRepository, testFilePath } = await setupRepository(
@@ -173,7 +220,11 @@ describe("git-cleanup", () => {
           expect(errorMessage).toContain(
             "❌ ERROR: Changes on branch not fully merged!",
           );
-          return;
+          const { stdout: currentBranch } = await gitTestClient("git", [
+            "branch",
+            "--show-current",
+          ]);
+          expect(currentBranch).toBe("test-branch");
         } else {
           throw error;
         }
@@ -204,7 +255,6 @@ describe("git-cleanup", () => {
       await gitTestClient("git", ["checkout", "main"]);
       await gitTestClient("git", ["checkout", "-b", "test-branch-2"]);
       const secondTestFilePath = path.join(testRepository, "test-file-2.js");
-      console.log(testFilePath, secondTestFilePath);
       await writeFile(
         secondTestFilePath,
         'console.log("This is another test");',
