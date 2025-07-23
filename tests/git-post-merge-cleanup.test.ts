@@ -12,7 +12,7 @@ import {
 } from "tests/test-clients/git-testing-utilities";
 import { describe, expect, test } from "vitest";
 
-describe("git-cleanup", () => {
+describe("git-post-merge-cleanup", () => {
   test("Checks out main from the current branch, then pulls down changes and deletes the previous branch", async () => {
     await temporaryDirectoryTask(async (tempDirectory) => {
       // Setup
