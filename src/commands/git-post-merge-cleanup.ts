@@ -7,7 +7,8 @@ interface Options {
 
 function gitCleanup(program: Command) {
   program
-    .command("git-cleanup")
+    .command("git-post-merge-cleanup")
+    .alias("git-cleanup")
     .description("Run after merging into main to quickly clean up")
     .option("--rebase", "Enable if your repository mainly rebases into main")
     .action(async ({ rebase }: Options) => {
