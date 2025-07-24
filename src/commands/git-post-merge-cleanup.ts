@@ -1,5 +1,8 @@
 import { Command } from "commander";
 import { execa, ExecaError } from "execa";
+import { readFile } from "fs/promises";
+import os from "os";
+import path from "path";
 import { createExecaClientWithDefaultOptions } from "src/utils/execa-helpers";
 
 interface Options {
@@ -12,7 +15,26 @@ function gitPostMergeCleanup(program: Command) {
     .alias("git-cleanup")
     .description("Run after merging into main to quickly clean up")
     .option("--rebase", "Enable if your repository mainly rebases into main")
-    .action(async ({ rebase }: Options) => {
+    .action(async ({ rebase: rebaseOption }: Options) => {
+      let alexCLineConfigJSON;
+      try {
+        alexCLineConfigJSON = await readFile(
+          path.join(
+            process.env.HOME ?? os.homedir(),
+            "alex-c-line-config.json",
+          ),
+          "utf-8",
+        );
+      } catch {
+        // If the file doesn't exist, we don't want to throw an error!
+      }
+      const alexCLineConfig = JSON.parse(alexCLineConfigJSON ?? "{}");
+      const rebase =
+        alexCLineConfig["git-post-merge-cleanup"]?.rebase ?? rebaseOption;
+      console.log(
+        `Running git-post-merge-cleanup in ${rebase ? "rebase" : "merge"} mode...`,
+      );
+
       const { stdout: currentBranch } = await execa`git branch --show-current`;
       if (currentBranch === "main") {
         console.error("❌ ERROR: Cannot run cleanup on main branch!");
@@ -24,6 +46,7 @@ function gitPostMergeCleanup(program: Command) {
       });
 
       if (rebase) {
+        console.log("Using rebase mode...");
         await runCommandAndLogToConsole("git", ["fetch", "origin", "main"]);
         await runCommandAndLogToConsole("git", ["pull", "origin", "main"]);
       }

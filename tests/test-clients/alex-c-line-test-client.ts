@@ -1,9 +1,5 @@
-import { execa } from "execa";
+import { execa, Options } from "execa";
 import path from "path";
-
-interface Options {
-  cwd: string;
-}
 
 async function alexCLineTestClient(
   command: string,
@@ -28,6 +24,9 @@ export function createAlexCLineTestClientInDirectory(directory: string) {
     return await alexCLineTestClient(command, args, {
       ...options,
       cwd: directory,
+      env: {
+        HOME: directory.split("/").slice(0, -1).join("/"),
+      },
     });
   };
 }
