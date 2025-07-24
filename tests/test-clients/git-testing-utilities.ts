@@ -8,6 +8,20 @@ export function createGitTestClient(repository: string) {
     args?: string[],
     options?: Omit<Options, "cwd">,
   ) => {
+    await execa(
+      "git",
+      ["config", "--global", "user.email", "test@example.com"],
+      {
+        env: {
+          HOME: repository.split("/").slice(0, -1).join("/"),
+        },
+      },
+    );
+    await execa("git", ["config", "--global", "user.name", "Test User"], {
+      env: {
+        HOME: repository.split("/").slice(0, -1).join("/"),
+      },
+    });
     return await execa(command, args, {
       ...options,
       cwd: repository,
