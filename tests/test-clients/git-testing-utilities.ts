@@ -8,7 +8,13 @@ export function createGitTestClient(repository: string) {
     args?: string[],
     options?: Omit<Options, "cwd">,
   ) => {
-    return await execa(command, args, { ...options, cwd: repository });
+    return await execa(command, args, {
+      ...options,
+      cwd: repository,
+      env: {
+        HOME: repository.split("/").slice(0, -1).join("/"),
+      },
+    });
   };
 }
 
@@ -66,8 +72,8 @@ export async function rebaseChangesOntoMain(
   await gitTestClient("git", ["rebase", "main"]);
   await gitTestClient("git", ["push", "--force", "origin", branchName]);
   await gitTestClient("git", ["checkout", "main"]);
-  await gitTestClient("git", ["merge", "--ff-only", branchName]);
-  await gitTestClient("git", ["push", "origin", "main"]);
+  await gitTestClient("git", ["merge", branchName]);
+  await gitTestClient("git", ["push", "--force", "origin", "main"]);
   await gitTestClient("git", ["push", "origin", "--delete", branchName]);
   await gitTestClient("git", ["checkout", branchName]);
 }

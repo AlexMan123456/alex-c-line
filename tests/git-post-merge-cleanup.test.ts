@@ -14,11 +14,11 @@ import { describe, expect, test } from "vitest";
 
 describe("git-post-merge-cleanup", () => {
   test("Checks out main from the current branch, then pulls down changes and deletes the previous branch", async () => {
-    await temporaryDirectoryTask(async (tempDirectory) => {
+    await temporaryDirectoryTask(async (temporaryDirectory) => {
       // Setup
-      const originDirectory = await setupOrigin(tempDirectory);
+      const originDirectory = await setupOrigin(temporaryDirectory);
       const { testRepository, testFilePath } = await setupRepository(
-        tempDirectory,
+        temporaryDirectory,
         originDirectory,
         "test-file.js",
       );
@@ -38,7 +38,7 @@ describe("git-post-merge-cleanup", () => {
 
       await mergeChangesIntoMain(testRepository, "test-branch");
 
-      await alexCLineTestClient("git-cleanup");
+      await alexCLineTestClient("git-post-merge-cleanup");
       const fileContentsAfter = await readFile(testFilePath, "utf-8");
       expect(fileContentsAfter).toBe('console.log("This is a test");');
       const { stdout: branches } = await execa("git", ["branch"], {
@@ -48,11 +48,11 @@ describe("git-post-merge-cleanup", () => {
     });
   });
   test("Throws an error if command is run on main branch", async () => {
-    await temporaryDirectoryTask(async (tempDirectory) => {
+    await temporaryDirectoryTask(async (temporaryDirectory) => {
       // Setup
-      const originDirectory = await setupOrigin(tempDirectory);
+      const originDirectory = await setupOrigin(temporaryDirectory);
       const { testRepository } = await setupRepository(
-        tempDirectory,
+        temporaryDirectory,
         originDirectory,
         "test-file.js",
       );
@@ -61,7 +61,7 @@ describe("git-post-merge-cleanup", () => {
         createAlexCLineTestClientInDirectory(testRepository);
 
       try {
-        await alexCLineTestClient("git-cleanup");
+        await alexCLineTestClient("git-post-merge-cleanup");
         throw new Error("TEST_FAILED");
       } catch (error: unknown) {
         if (error instanceof ExecaError) {
@@ -77,11 +77,11 @@ describe("git-post-merge-cleanup", () => {
     });
   });
   test("Throw a custom error if branch not fully merged, and go back to current branch", async () => {
-    await temporaryDirectoryTask(async (tempDirectory) => {
+    await temporaryDirectoryTask(async (temporaryDirectory) => {
       // Setup
-      const originDirectory = await setupOrigin(tempDirectory);
+      const originDirectory = await setupOrigin(temporaryDirectory);
       const { testRepository, testFilePath } = await setupRepository(
-        tempDirectory,
+        temporaryDirectory,
         originDirectory,
         "test-file.js",
       );
@@ -99,7 +99,7 @@ describe("git-post-merge-cleanup", () => {
       await gitTestClient("git", ["commit", "-m", "This is a test"]);
 
       try {
-        await alexCLineTestClient("git-cleanup");
+        await alexCLineTestClient("git-post-merge-cleanup");
         throw new Error("TEST_FAILED");
       } catch (error: unknown) {
         if (error instanceof ExecaError) {
@@ -120,10 +120,10 @@ describe("git-post-merge-cleanup", () => {
     });
   });
   test("Force-deletes branch in rebase mode", async () => {
-    await temporaryDirectoryTask(async (tempDirectory) => {
-      const originDirectory = await setupOrigin(tempDirectory);
+    await temporaryDirectoryTask(async (temporaryDirectory) => {
+      const originDirectory = await setupOrigin(temporaryDirectory);
       const { testRepository, testFilePath } = await setupRepository(
-        tempDirectory,
+        temporaryDirectory,
         originDirectory,
         "test-file.js",
       );
@@ -143,7 +143,7 @@ describe("git-post-merge-cleanup", () => {
 
       await rebaseChangesOntoMain(testRepository, "test-branch");
 
-      await alexCLineTestClient("git-cleanup", ["--rebase"]);
+      await alexCLineTestClient("git-post-merge-cleanup", ["--rebase"]);
       const { stdout: branches } = await gitTestClient("git", ["branch"]);
       expect(branches).not.toContain("test-branch");
       const fileContentsAfter = await readFile(testFilePath, "utf-8");
@@ -151,10 +151,10 @@ describe("git-post-merge-cleanup", () => {
     });
   });
   test("If current branch differs from main on rebase, throw an error", async () => {
-    await temporaryDirectoryTask(async (tempDirectory) => {
-      const originDirectory = await setupOrigin(tempDirectory);
+    await temporaryDirectoryTask(async (temporaryDirectory) => {
+      const originDirectory = await setupOrigin(temporaryDirectory);
       const { testRepository, testFilePath } = await setupRepository(
-        tempDirectory,
+        temporaryDirectory,
         originDirectory,
         "test-file.js",
       );
@@ -169,7 +169,7 @@ describe("git-post-merge-cleanup", () => {
       await gitTestClient("git", ["commit", "-m", "This is a test"]);
 
       try {
-        await alexCLineTestClient("git-cleanup", ["--rebase"]);
+        await alexCLineTestClient("git-post-merge-cleanup", ["--rebase"]);
         throw new Error("TEST_FAILED");
       } catch (error: unknown) {
         if (error instanceof ExecaError) {
@@ -190,10 +190,10 @@ describe("git-post-merge-cleanup", () => {
     });
   });
   test("If current branch exists on remote but has not been rebase-merged yet, throw an error", async () => {
-    await temporaryDirectoryTask(async (tempDirectory) => {
-      const originDirectory = await setupOrigin(tempDirectory);
+    await temporaryDirectoryTask(async (temporaryDirectory) => {
+      const originDirectory = await setupOrigin(temporaryDirectory);
       const { testRepository, testFilePath } = await setupRepository(
-        tempDirectory,
+        temporaryDirectory,
         originDirectory,
         "test-file.js",
       );
@@ -209,9 +209,7 @@ describe("git-post-merge-cleanup", () => {
       await gitTestClient("git", ["push", "origin", "test-branch"]);
 
       try {
-        await alexCLineTestClient("git-cleanup", ["--rebase"], {
-          cwd: testRepository,
-        });
+        await alexCLineTestClient("git-post-merge-cleanup", ["--rebase"]);
         throw new Error("TEST_FAILED");
       } catch (error: unknown) {
         if (error instanceof ExecaError) {
@@ -232,10 +230,10 @@ describe("git-post-merge-cleanup", () => {
     });
   });
   test("If someone made changes beforehand, still allow the rebase to go through", async () => {
-    await temporaryDirectoryTask(async (tempDirectory) => {
-      const originDirectory = await setupOrigin(tempDirectory);
+    await temporaryDirectoryTask(async (temporaryDirectory) => {
+      const originDirectory = await setupOrigin(temporaryDirectory);
       const { testRepository, testFilePath } = await setupRepository(
-        tempDirectory,
+        temporaryDirectory,
         originDirectory,
         "test-file-1.js",
       );
@@ -267,7 +265,7 @@ describe("git-post-merge-cleanup", () => {
       await rebaseChangesOntoMain(testRepository, "test-branch-1");
 
       // Check test-branch-1 has been rebased and merged
-      await alexCLineTestClient("git-cleanup", ["--rebase"]);
+      await alexCLineTestClient("git-post-merge-cleanup", ["--rebase"]);
       const fileContentsAfterFirst = await readFile(testFilePath, "utf-8");
       expect(fileContentsAfterFirst).toBe('console.log("This is a test");');
       const { stdout: branchesAfterFirst } = await gitTestClient("git", [
@@ -279,7 +277,7 @@ describe("git-post-merge-cleanup", () => {
       await rebaseChangesOntoMain(testRepository, "test-branch-2");
 
       // Check test-branch-2 has been rebased and merged
-      await alexCLineTestClient("git-cleanup", ["--rebase"]);
+      await alexCLineTestClient("git-post-merge-cleanup", ["--rebase"]);
       const fileContentsAfterSecond = await readFile(
         secondTestFilePath,
         "utf-8",
@@ -291,6 +289,45 @@ describe("git-post-merge-cleanup", () => {
         "branch",
       ]);
       expect(branchesAfterSecond).not.toContain("test-branch-2");
+    });
+  });
+  test("Merge strategy defaults to rebase if set in alex-c-line-config.json in system root", async () => {
+    await temporaryDirectoryTask(async (temporaryDirectory) => {
+      await writeFile(
+        path.join(temporaryDirectory, "alex-c-line-config.json"),
+        JSON.stringify({ "git-post-merge-cleanup": { rebase: true } }),
+      );
+      // Setup
+      const originDirectory = await setupOrigin(temporaryDirectory);
+      const { testRepository, testFilePath } = await setupRepository(
+        temporaryDirectory,
+        originDirectory,
+        "test-file.js",
+      );
+      const fileContentsBefore = await readFile(testFilePath, "utf-8");
+      expect(fileContentsBefore).toBe("");
+
+      const gitTestClient = createGitTestClient(testRepository);
+      const alexCLineTestClient =
+        createAlexCLineTestClientInDirectory(testRepository);
+
+      // Setup an actual test file
+      await gitTestClient("git", ["checkout", "-b", "test-branch"]);
+      await writeFile(testFilePath, 'console.log("This is a test");');
+      await gitTestClient("git", ["add", "test-file.js"]);
+      await gitTestClient("git", ["commit", "-m", "This is a test"]);
+      await gitTestClient("git", ["push", "origin", "test-branch"]);
+
+      await rebaseChangesOntoMain(testRepository, "test-branch");
+
+      const { stdout: output } = await alexCLineTestClient(
+        "git-post-merge-cleanup",
+      );
+      expect(output).toContain("Using rebase mode...");
+      const { stdout: branches } = await gitTestClient("git", ["branch"]);
+      expect(branches).not.toContain("test-branch");
+      const fileContentsAfter = await readFile(testFilePath, "utf-8");
+      expect(fileContentsAfter).toBe('console.log("This is a test");');
     });
   });
 });
