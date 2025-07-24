@@ -73,7 +73,7 @@ function gitPostMergeCleanup(program: Command) {
           if (error instanceof ExecaError) {
             console.error("❌ ERROR: Changes on branch not fully merged!");
             await execa`git checkout ${currentBranch}`;
-            process.exitCode = 1;
+            process.exit(1);
           }
           throw error;
         }
