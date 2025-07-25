@@ -323,7 +323,9 @@ describe("git-post-merge-cleanup", () => {
       const { stdout: output } = await alexCLineTestClient(
         "git-post-merge-cleanup",
       );
-      expect(output).toContain("Using rebase mode...");
+      expect(output).toContain(
+        "Running git-post-merge-cleanup in rebase mode...",
+      );
       const { stdout: branches } = await gitTestClient("git", ["branch"]);
       expect(branches).not.toContain("test-branch");
       const fileContentsAfter = await readFile(testFilePath, "utf-8");

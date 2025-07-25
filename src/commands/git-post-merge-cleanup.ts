@@ -46,7 +46,6 @@ function gitPostMergeCleanup(program: Command) {
       });
 
       if (rebase) {
-        console.log("Using rebase mode...");
         await runCommandAndLogToConsole("git", ["fetch", "origin", "main"]);
         await runCommandAndLogToConsole("git", ["pull", "origin", "main"]);
       }
