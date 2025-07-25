@@ -332,4 +332,43 @@ describe("git-post-merge-cleanup", () => {
       expect(fileContentsAfter).toBe('console.log("This is a test");');
     });
   });
+  test("If config file exists but is completely empty, ignore it", async () => {
+    await temporaryDirectoryTask(async (temporaryDirectory) => {
+      await writeFile(
+        path.join(temporaryDirectory, "alex-c-line-config.json"),
+        "",
+      );
+
+      // Setup
+      const originDirectory = await setupOrigin(temporaryDirectory);
+      const { testRepository, testFilePath } = await setupRepository(
+        temporaryDirectory,
+        originDirectory,
+        "test-file.js",
+      );
+      const fileContentsBefore = await readFile(testFilePath, "utf-8");
+      expect(fileContentsBefore).toBe("");
+
+      const gitTestClient = createGitTestClient(testRepository);
+      const alexCLineTestClient =
+        createAlexCLineTestClientInDirectory(testRepository);
+
+      // Setup test file
+      await gitTestClient("git", ["checkout", "-b", "test-branch"]);
+      await writeFile(testFilePath, 'console.log("This is a test");');
+      await gitTestClient("git", ["add", "test-file.js"]);
+      await gitTestClient("git", ["commit", "-m", "This is a test"]);
+      await gitTestClient("git", ["push", "origin", "test-branch"]);
+
+      await mergeChangesIntoMain(testRepository, "test-branch");
+
+      await alexCLineTestClient("git-post-merge-cleanup");
+      const fileContentsAfter = await readFile(testFilePath, "utf-8");
+      expect(fileContentsAfter).toBe('console.log("This is a test");');
+      const { stdout: branches } = await execa("git", ["branch"], {
+        cwd: testRepository,
+      });
+      expect(branches).not.toContain("test-branch");
+    });
+  });
 });

@@ -28,7 +28,10 @@ function gitPostMergeCleanup(program: Command) {
       } catch {
         // If the file doesn't exist, we don't want to throw an error!
       }
-      const alexCLineConfig = JSON.parse(alexCLineConfigJSON ?? "{}");
+      if (!alexCLineConfigJSON) {
+        alexCLineConfigJSON = "{}";
+      }
+      const alexCLineConfig = JSON.parse(alexCLineConfigJSON);
       const rebase =
         alexCLineConfig["git-post-merge-cleanup"]?.rebase ?? rebaseOption;
       console.log(
