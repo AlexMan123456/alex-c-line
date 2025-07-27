@@ -1,22 +1,15 @@
-import { execa, Options } from "execa";
+import type { Options } from "execa";
+import { execa } from "execa";
 import { writeFile } from "fs/promises";
 import path from "path";
 
 export function createGitTestClient(repository: string) {
-  return async (
-    command: string,
-    args?: string[],
-    options?: Omit<Options, "cwd">,
-  ) => {
-    await execa(
-      "git",
-      ["config", "--global", "user.email", "test@example.com"],
-      {
-        env: {
-          HOME: repository.split("/").slice(0, -1).join("/"),
-        },
+  return async (command: string, args?: string[], options?: Omit<Options, "cwd">) => {
+    await execa("git", ["config", "--global", "user.email", "test@example.com"], {
+      env: {
+        HOME: repository.split("/").slice(0, -1).join("/"),
       },
-    );
+    });
     await execa("git", ["config", "--global", "user.name", "Test User"], {
       env: {
         HOME: repository.split("/").slice(0, -1).join("/"),
@@ -57,28 +50,16 @@ export async function setupRepository(
   return { testRepository, testFilePath };
 }
 
-export async function mergeChangesIntoMain(
-  testRepository: string,
-  branchName: string,
-) {
+export async function mergeChangesIntoMain(testRepository: string, branchName: string) {
   const gitTestClient = createGitTestClient(testRepository);
   await gitTestClient("git", ["checkout", "main"]);
-  await gitTestClient("git", [
-    "merge",
-    branchName,
-    "--no-ff",
-    "-m",
-    "Merge into main",
-  ]);
+  await gitTestClient("git", ["merge", branchName, "--no-ff", "-m", "Merge into main"]);
   await gitTestClient("git", ["push", "origin", "main"]);
   await gitTestClient("git", ["push", "origin", "--delete", branchName]);
   await gitTestClient("git", ["checkout", branchName]);
 }
 
-export async function rebaseChangesOntoMain(
-  testRepository: string,
-  branchName: string,
-) {
+export async function rebaseChangesOntoMain(testRepository: string, branchName: string) {
   const gitTestClient = createGitTestClient(testRepository);
   await gitTestClient("git", ["checkout", "main"]);
   await gitTestClient("git", ["pull", "origin", "main"]);

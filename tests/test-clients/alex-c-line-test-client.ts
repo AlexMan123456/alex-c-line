@@ -1,11 +1,8 @@
-import { execa, Options } from "execa";
+import type { Options } from "execa";
+import { execa } from "execa";
 import path from "path";
 
-async function alexCLineTestClient(
-  command: string,
-  args?: string[],
-  options?: Options,
-) {
+async function alexCLineTestClient(command: string, args?: string[], options?: Options) {
   const localDistDirectory = path.resolve(process.cwd(), "dist");
   const newArguments = args ?? [];
   return await execa(
@@ -16,11 +13,7 @@ async function alexCLineTestClient(
 }
 
 export function createAlexCLineTestClientInDirectory(directory: string) {
-  return async (
-    command: string,
-    args?: string[],
-    options?: Omit<Options, "cwd">,
-  ) => {
+  return async (command: string, args?: string[], options?: Omit<Options, "cwd">) => {
     return await alexCLineTestClient(command, args, {
       ...options,
       cwd: directory,

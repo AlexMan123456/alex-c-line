@@ -26,8 +26,7 @@ describe("git-post-merge-cleanup", () => {
       expect(fileContentsBefore).toBe("");
 
       const gitTestClient = createGitTestClient(testRepository);
-      const alexCLineTestClient =
-        createAlexCLineTestClientInDirectory(testRepository);
+      const alexCLineTestClient = createAlexCLineTestClientInDirectory(testRepository);
 
       // Setup test file
       await gitTestClient("git", ["checkout", "-b", "test-branch"]);
@@ -57,8 +56,7 @@ describe("git-post-merge-cleanup", () => {
         "test-file.js",
       );
 
-      const alexCLineTestClient =
-        createAlexCLineTestClientInDirectory(testRepository);
+      const alexCLineTestClient = createAlexCLineTestClientInDirectory(testRepository);
 
       try {
         await alexCLineTestClient("git-post-merge-cleanup");
@@ -67,9 +65,7 @@ describe("git-post-merge-cleanup", () => {
         if (error instanceof ExecaError) {
           const { stderr: errorMessage, exitCode } = error;
           expect(exitCode).toBe(1);
-          expect(errorMessage).toBe(
-            "❌ ERROR: Cannot run cleanup on main branch!",
-          );
+          expect(errorMessage).toBe("❌ ERROR: Cannot run cleanup on main branch!");
         } else {
           throw error;
         }
@@ -89,8 +85,7 @@ describe("git-post-merge-cleanup", () => {
       expect(fileContentsBefore).toBe("");
 
       const gitTestClient = createGitTestClient(testRepository);
-      const alexCLineTestClient =
-        createAlexCLineTestClientInDirectory(testRepository);
+      const alexCLineTestClient = createAlexCLineTestClientInDirectory(testRepository);
 
       // Setup test file
       await gitTestClient("git", ["checkout", "-b", "test-branch"]);
@@ -105,9 +100,7 @@ describe("git-post-merge-cleanup", () => {
         if (error instanceof ExecaError) {
           const { exitCode, stderr: errorMessage } = error;
           expect(exitCode).toBe(1);
-          expect(errorMessage).toContain(
-            "❌ ERROR: Changes on branch not fully merged!",
-          );
+          expect(errorMessage).toContain("❌ ERROR: Changes on branch not fully merged!");
           const { stdout: currentBranch } = await gitTestClient("git", [
             "branch",
             "--show-current",
@@ -131,8 +124,7 @@ describe("git-post-merge-cleanup", () => {
       expect(fileContentsBefore).toBe("");
 
       const gitTestClient = createGitTestClient(testRepository);
-      const alexCLineTestClient =
-        createAlexCLineTestClientInDirectory(testRepository);
+      const alexCLineTestClient = createAlexCLineTestClientInDirectory(testRepository);
 
       // Setup an actual test file
       await gitTestClient("git", ["checkout", "-b", "test-branch"]);
@@ -160,8 +152,7 @@ describe("git-post-merge-cleanup", () => {
       );
 
       const gitTestClient = createGitTestClient(testRepository);
-      const alexCLineTestClient =
-        createAlexCLineTestClientInDirectory(testRepository);
+      const alexCLineTestClient = createAlexCLineTestClientInDirectory(testRepository);
 
       await gitTestClient("git", ["checkout", "-b", "test-branch"]);
       await writeFile(testFilePath, 'console.log("This is a test");');
@@ -175,9 +166,7 @@ describe("git-post-merge-cleanup", () => {
         if (error instanceof ExecaError) {
           const { stderr: errorMessage, exitCode } = error;
           expect(exitCode).toBe(1);
-          expect(errorMessage).toContain(
-            "❌ ERROR: Changes on branch not fully merged!",
-          );
+          expect(errorMessage).toContain("❌ ERROR: Changes on branch not fully merged!");
           const { stdout: currentBranch } = await gitTestClient("git", [
             "branch",
             "--show-current",
@@ -199,8 +188,7 @@ describe("git-post-merge-cleanup", () => {
       );
 
       const gitTestClient = createGitTestClient(testRepository);
-      const alexCLineTestClient =
-        createAlexCLineTestClientInDirectory(testRepository);
+      const alexCLineTestClient = createAlexCLineTestClientInDirectory(testRepository);
 
       await gitTestClient("git", ["checkout", "-b", "test-branch"]);
       await writeFile(testFilePath, 'console.log("This is a test");');
@@ -215,9 +203,7 @@ describe("git-post-merge-cleanup", () => {
         if (error instanceof ExecaError) {
           const { stderr: errorMessage, exitCode } = error;
           expect(exitCode).toBe(1);
-          expect(errorMessage).toContain(
-            "❌ ERROR: Changes on branch not fully merged!",
-          );
+          expect(errorMessage).toContain("❌ ERROR: Changes on branch not fully merged!");
           const { stdout: currentBranch } = await gitTestClient("git", [
             "branch",
             "--show-current",
@@ -239,8 +225,7 @@ describe("git-post-merge-cleanup", () => {
       );
 
       const gitTestClient = createGitTestClient(testRepository);
-      const alexCLineTestClient =
-        createAlexCLineTestClientInDirectory(testRepository);
+      const alexCLineTestClient = createAlexCLineTestClientInDirectory(testRepository);
 
       // Create a change on test-branch-1
       await gitTestClient("git", ["checkout", "-b", "test-branch-1"]);
@@ -253,10 +238,7 @@ describe("git-post-merge-cleanup", () => {
       await gitTestClient("git", ["checkout", "main"]);
       await gitTestClient("git", ["checkout", "-b", "test-branch-2"]);
       const secondTestFilePath = path.join(testRepository, "test-file-2.js");
-      await writeFile(
-        secondTestFilePath,
-        'console.log("This is another test");',
-      );
+      await writeFile(secondTestFilePath, 'console.log("This is another test");');
       await gitTestClient("git", ["add", "test-file-2.js"]);
       await gitTestClient("git", ["commit", "-m", "This is a second test"]);
       await gitTestClient("git", ["push", "origin", "test-branch-2"]);
@@ -268,9 +250,7 @@ describe("git-post-merge-cleanup", () => {
       await alexCLineTestClient("git-post-merge-cleanup", ["--rebase"]);
       const fileContentsAfterFirst = await readFile(testFilePath, "utf-8");
       expect(fileContentsAfterFirst).toBe('console.log("This is a test");');
-      const { stdout: branchesAfterFirst } = await gitTestClient("git", [
-        "branch",
-      ]);
+      const { stdout: branchesAfterFirst } = await gitTestClient("git", ["branch"]);
       expect(branchesAfterFirst).not.toContain("test-branch-1");
 
       // Rebase and merge changes from
@@ -278,16 +258,9 @@ describe("git-post-merge-cleanup", () => {
 
       // Check test-branch-2 has been rebased and merged
       await alexCLineTestClient("git-post-merge-cleanup", ["--rebase"]);
-      const fileContentsAfterSecond = await readFile(
-        secondTestFilePath,
-        "utf-8",
-      );
-      expect(fileContentsAfterSecond).toBe(
-        'console.log("This is another test");',
-      );
-      const { stdout: branchesAfterSecond } = await gitTestClient("git", [
-        "branch",
-      ]);
+      const fileContentsAfterSecond = await readFile(secondTestFilePath, "utf-8");
+      expect(fileContentsAfterSecond).toBe('console.log("This is another test");');
+      const { stdout: branchesAfterSecond } = await gitTestClient("git", ["branch"]);
       expect(branchesAfterSecond).not.toContain("test-branch-2");
     });
   });
@@ -308,8 +281,7 @@ describe("git-post-merge-cleanup", () => {
       expect(fileContentsBefore).toBe("");
 
       const gitTestClient = createGitTestClient(testRepository);
-      const alexCLineTestClient =
-        createAlexCLineTestClientInDirectory(testRepository);
+      const alexCLineTestClient = createAlexCLineTestClientInDirectory(testRepository);
 
       // Setup an actual test file
       await gitTestClient("git", ["checkout", "-b", "test-branch"]);
@@ -320,12 +292,8 @@ describe("git-post-merge-cleanup", () => {
 
       await rebaseChangesOntoMain(testRepository, "test-branch");
 
-      const { stdout: output } = await alexCLineTestClient(
-        "git-post-merge-cleanup",
-      );
-      expect(output).toContain(
-        "Running git-post-merge-cleanup in rebase mode...",
-      );
+      const { stdout: output } = await alexCLineTestClient("git-post-merge-cleanup");
+      expect(output).toContain("Running git-post-merge-cleanup in rebase mode...");
       const { stdout: branches } = await gitTestClient("git", ["branch"]);
       expect(branches).not.toContain("test-branch");
       const fileContentsAfter = await readFile(testFilePath, "utf-8");
@@ -334,10 +302,7 @@ describe("git-post-merge-cleanup", () => {
   });
   test("If config file exists but is completely empty, ignore it", async () => {
     await temporaryDirectoryTask(async (temporaryDirectory) => {
-      await writeFile(
-        path.join(temporaryDirectory, "alex-c-line-config.json"),
-        "",
-      );
+      await writeFile(path.join(temporaryDirectory, "alex-c-line-config.json"), "");
 
       // Setup
       const originDirectory = await setupOrigin(temporaryDirectory);
@@ -350,8 +315,7 @@ describe("git-post-merge-cleanup", () => {
       expect(fileContentsBefore).toBe("");
 
       const gitTestClient = createGitTestClient(testRepository);
-      const alexCLineTestClient =
-        createAlexCLineTestClientInDirectory(testRepository);
+      const alexCLineTestClient = createAlexCLineTestClientInDirectory(testRepository);
 
       // Setup test file
       await gitTestClient("git", ["checkout", "-b", "test-branch"]);

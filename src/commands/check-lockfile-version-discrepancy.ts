@@ -1,17 +1,13 @@
-import { Command } from "commander";
+import type { Command } from "commander";
 import { readFileSync } from "fs";
 import path from "path";
 
 function checkLockfileVersionDiscrepancy(program: Command) {
   program
     .command("check-lockfile-version-discrepancy")
-    .description(
-      "Check that version numbers in package.json and package-lock.json match",
-    )
+    .description("Check that version numbers in package.json and package-lock.json match")
     .action(() => {
-      console.log(
-        "Checking for package.json and package-lock.json discrepancies...",
-      );
+      console.log("Checking for package.json and package-lock.json discrepancies...");
       const { version: packageVersion } = JSON.parse(
         readFileSync(path.resolve(process.cwd(), "package.json"), "utf-8"),
       );
