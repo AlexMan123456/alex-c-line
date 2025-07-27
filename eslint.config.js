@@ -8,4 +8,11 @@ export default [
       "no-console": "off",
     },
   },
+  {
+    files: ["**/tests/**.test.ts"],
+    rules: {
+      // But forbid it in tests because more often than not, they're a mistake from debugging there.
+      "no-console": ["error", { allow: ["warn", "error"] }]
+    }
+  }
 ];

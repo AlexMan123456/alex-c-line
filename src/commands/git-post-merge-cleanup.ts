@@ -1,4 +1,4 @@
-import { Command } from "commander";
+import type { Command } from "commander";
 import { execa, ExecaError } from "execa";
 import { readFile } from "fs/promises";
 import os from "os";
@@ -19,10 +19,7 @@ function gitPostMergeCleanup(program: Command) {
       let alexCLineConfigJSON;
       try {
         alexCLineConfigJSON = await readFile(
-          path.join(
-            process.env.HOME ?? os.homedir(),
-            "alex-c-line-config.json",
-          ),
+          path.join(process.env.HOME ?? os.homedir(), "alex-c-line-config.json"),
           "utf-8",
         );
       } catch {
@@ -32,11 +29,8 @@ function gitPostMergeCleanup(program: Command) {
         alexCLineConfigJSON = "{}";
       }
       const alexCLineConfig = JSON.parse(alexCLineConfigJSON);
-      const rebase =
-        alexCLineConfig["git-post-merge-cleanup"]?.rebase ?? rebaseOption;
-      console.log(
-        `Running git-post-merge-cleanup in ${rebase ? "rebase" : "merge"} mode...`,
-      );
+      const rebase = alexCLineConfig["git-post-merge-cleanup"]?.rebase ?? rebaseOption;
+      console.log(`Running git-post-merge-cleanup in ${rebase ? "rebase" : "merge"} mode...`);
 
       const { stdout: currentBranch } = await execa`git branch --show-current`;
       if (currentBranch === "main") {
@@ -55,8 +49,7 @@ function gitPostMergeCleanup(program: Command) {
       await runCommandAndLogToConsole("git", ["checkout", "main"]);
       await runCommandAndLogToConsole("git", ["pull", "origin", "main"]);
       if (rebase) {
-        const { stdout: changes } =
-          await execa`git diff main..${currentBranch}`;
+        const { stdout: changes } = await execa`git diff main..${currentBranch}`;
         if (changes) {
           console.error("❌ ERROR: Changes on branch not fully merged!");
           await execa`git checkout ${currentBranch}`;
