@@ -16,11 +16,6 @@ function editEnv(program: Command) {
     .command("edit-env <key> <value>")
     .description("Edit property in .env file ")
     .action(async (key: string, value: string) => {
-      if (!key || !value) {
-        console.error("Invalid property. Please provide property in format PROPERTY=value");
-        process.exit(1);
-      }
-
       let currentEnvFileContents: Record<string, unknown>;
       try {
         currentEnvFileContents = dotenv.parse(
