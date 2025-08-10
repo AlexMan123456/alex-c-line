@@ -23,6 +23,7 @@ function editEnv(program: Command) {
       currentEnvFileContents[key] = value;
 
       await writeFile(path.join(process.cwd(), ".env"), dotenvStringify(currentEnvFileContents));
+      console.log(".env file updated");
     });
 }
 
