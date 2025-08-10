@@ -1,9 +1,11 @@
-import { describe, expect, test } from "vitest";
-import { temporaryDirectoryTask } from "tempy";
-import path from "path";
 import { writeFile } from "fs/promises";
-import alexCLineTestClient from "tests/test-clients/alex-c-line-test-client";
+import path from "path";
+
 import { ExecaError } from "execa";
+import { temporaryDirectoryTask } from "tempy";
+import { describe, expect, test } from "vitest";
+
+import alexCLineTestClient from "tests/test-clients/alex-c-line-test-client";
 
 describe("check-lockfile-version-discrepancy", () => {
   test("Succeed if version numbers in package.json and package-lock.json are successful", async () => {
