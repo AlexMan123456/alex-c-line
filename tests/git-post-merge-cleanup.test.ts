@@ -1,7 +1,10 @@
-import { execa, ExecaError } from "execa";
 import { readFile, writeFile } from "fs/promises";
 import path from "path";
+
+import { execa, ExecaError } from "execa";
 import { temporaryDirectoryTask } from "tempy";
+import { describe, expect, test } from "vitest";
+
 import { createAlexCLineTestClientInDirectory } from "tests/test-clients/alex-c-line-test-client";
 import {
   createGitTestClient,
@@ -10,7 +13,6 @@ import {
   setupOrigin,
   setupRepository,
 } from "tests/test-clients/git-testing-utilities";
-import { describe, expect, test } from "vitest";
 
 describe("git-post-merge-cleanup", () => {
   test("Checks out main from the current branch, then pulls down changes and deletes the previous branch", async () => {
