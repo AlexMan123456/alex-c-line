@@ -13,6 +13,12 @@ async function alexCLineTestClient(command: string, args?: string[], options?: O
   );
 }
 
+export function createAlexCLineTestClient(defaultOptions?: Options) {
+  return async (command: string, args?: string[], options?: Options) => {
+    return await alexCLineTestClient(command, args, { ...defaultOptions, ...options });
+  };
+}
+
 export function createAlexCLineTestClientInDirectory(directory: string) {
   return async (command: string, args?: string[], options?: Omit<Options, "cwd">) => {
     return await alexCLineTestClient(command, args, {
