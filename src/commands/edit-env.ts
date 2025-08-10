@@ -6,16 +6,11 @@ import dotenv from "dotenv";
 // @ts-ignore
 import dotenvStringify from "dotenv-stringify";
 
-export interface EditEnvOptions {
-  key: string;
-  value: unknown;
-}
-
 function editEnv(program: Command) {
   program
     .command("edit-env <key> <value>")
     .description("Edit property in .env file ")
-    .action(async (key: string, value: string) => {
+    .action(async (key: string, value: unknown) => {
       let currentEnvFileContents: Record<string, unknown>;
       try {
         currentEnvFileContents = dotenv.parse(
