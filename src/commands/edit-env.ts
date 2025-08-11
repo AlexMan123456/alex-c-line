@@ -8,9 +8,9 @@ import dotenvStringify from "dotenv-stringify";
 
 function editEnv(program: Command) {
   program
-    .command("edit-env <key> <value>")
-    .description("Edit property in .env file ")
-    .action(async (key: string, value: unknown) => {
+    .command("edit-env <key> [value]")
+    .description("Edit property in .env file (leave value blank to delete property)")
+    .action(async (key: string, value?: unknown) => {
       let currentEnvFileContents: Record<string, unknown>;
       try {
         currentEnvFileContents = dotenv.parse(
@@ -20,7 +20,11 @@ function editEnv(program: Command) {
         currentEnvFileContents = {};
       }
 
-      currentEnvFileContents[key] = value;
+      if (value !== undefined) {
+        currentEnvFileContents[key] = value;
+      } else {
+        delete currentEnvFileContents[key];
+      }
 
       await writeFile(path.join(process.cwd(), ".env"), dotenvStringify(currentEnvFileContents));
       console.log(".env file updated");
