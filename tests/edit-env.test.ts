@@ -56,4 +56,44 @@ describe("edit-env", () => {
       expect(envFileContents.PROPERTY).toBe("hello");
     });
   });
+  test("If only key is specified, delete the corresponding environment variable", async () => {
+    await temporaryDirectoryTask(async (temporaryPath) => {
+      const alexCLineTestClient = createAlexCLineTestClient({ cwd: temporaryPath });
+      await writeFile(
+        path.join(temporaryPath, ".env"),
+        dotenvStringify({
+          DATABASE_URL: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+          PROPERTY: "test",
+        }),
+      );
+
+      // Get de-rickrolled but keep the DATABASE_URL property around
+      await alexCLineTestClient("edit-env", ["DATABASE_URL"]);
+      const envFileContents = dotenv.parse(
+        await readFile(path.join(temporaryPath, ".env"), "utf-8"),
+      );
+      expect(envFileContents).not.toHaveProperty("DATABASE_URL");
+      expect(envFileContents.PROPERTY).toBe("test");
+    });
+  });
+  test("Allows value to be an empty string to create an environment variable with an empty value", async () => {
+    await temporaryDirectoryTask(async (temporaryPath) => {
+      const alexCLineTestClient = createAlexCLineTestClient({ cwd: temporaryPath });
+      await writeFile(
+        path.join(temporaryPath, ".env"),
+        dotenvStringify({
+          DATABASE_URL: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+          PROPERTY: "test",
+        }),
+      );
+
+      // Get de-rickrolled but keep the DATABASE_URL property around
+      await alexCLineTestClient("edit-env", ["DATABASE_URL", ""]);
+      const envFileContents = dotenv.parse(
+        await readFile(path.join(temporaryPath, ".env"), "utf-8"),
+      );
+      expect(envFileContents.DATABASE_URL).toBe("");
+      expect(envFileContents.PROPERTY).toBe("test");
+    });
+  });
 });
