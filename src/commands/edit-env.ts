@@ -31,7 +31,10 @@ function editEnv(program: Command) {
         delete currentEnvFileContents[key];
       }
 
-      await writeFile(path.join(process.cwd(), file), dotenvStringify(currentEnvFileContents));
+      await writeFile(
+        path.join(process.cwd(), file),
+        dotenvStringify(currentEnvFileContents) + "\n",
+      );
       console.log(".env file updated");
     });
 }

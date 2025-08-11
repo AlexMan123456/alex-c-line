@@ -14,6 +14,18 @@ describe("edit-env", () => {
     await temporaryDirectoryTask(async (temporaryPath) => {
       const alexCLineTestClient = createAlexCLineTestClient({ cwd: temporaryPath });
 
+      await alexCLineTestClient("edit-env", [
+        "DATABASE_URL",
+        "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      ]);
+      const envFileContents = await readFile(path.join(temporaryPath, ".env"), "utf-8");
+      expect(envFileContents.endsWith("\n")).toBe(true);
+    });
+  });
+  test("Adds newline to end of file", async () => {
+    await temporaryDirectoryTask(async (temporaryPath) => {
+      const alexCLineTestClient = createAlexCLineTestClient({ cwd: temporaryPath });
+
       await alexCLineTestClient("edit-env", ["PROPERTY", "hello"]);
       const envFileContents = dotenv.parse(
         await readFile(path.join(temporaryPath, ".env"), "utf-8"),
