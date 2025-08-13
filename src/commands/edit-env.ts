@@ -3,7 +3,6 @@ import path from "path";
 
 import type { Command } from "commander";
 import dotenv from "dotenv";
-// @ts-ignore
 import dotenvStringify from "dotenv-stringify";
 
 function editEnv(program: Command) {
