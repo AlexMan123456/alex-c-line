@@ -2,7 +2,6 @@ import { readFile, writeFile } from "fs/promises";
 import path from "path";
 
 import dotenv from "dotenv";
-// @ts-ignore
 import dotenvStringify from "dotenv-stringify";
 import { temporaryDirectoryTask } from "tempy";
 import { describe, expect, test } from "vitest";
