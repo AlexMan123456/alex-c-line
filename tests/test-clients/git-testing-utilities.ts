@@ -1,7 +1,8 @@
+import type { Options } from "execa";
+
 import { writeFile } from "fs/promises";
 import path from "path";
 
-import type { Options } from "execa";
 import { execa } from "execa";
 
 export function createGitTestClient(repository: string) {

@@ -1,7 +1,8 @@
+import type { Command } from "commander";
+
 import { readFile, writeFile } from "fs/promises";
 import path from "path";
 
-import type { Command } from "commander";
 import dotenv from "dotenv";
 import dotenvStringify from "dotenv-stringify";
 
