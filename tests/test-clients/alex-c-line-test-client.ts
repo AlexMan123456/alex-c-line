@@ -1,6 +1,7 @@
+import type { Options } from "execa";
+
 import path from "path";
 
-import type { Options } from "execa";
 import { execa } from "execa";
 
 async function alexCLineTestClient(command: string, args?: string[], options?: Options) {

@@ -3,9 +3,8 @@ import path from "path";
 
 import { ExecaError } from "execa";
 import { temporaryDirectoryTask } from "tempy";
-import { describe, expect, test } from "vitest";
-
 import alexCLineTestClient from "tests/test-clients/alex-c-line-test-client";
+import { describe, expect, test } from "vitest";
 
 describe("check-lockfile-version-discrepancy", () => {
   test("Succeed if version numbers in package.json and package-lock.json are successful", async () => {
