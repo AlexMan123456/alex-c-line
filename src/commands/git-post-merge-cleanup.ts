@@ -51,6 +51,7 @@ function gitPostMergeCleanup(program: Command) {
       }
       await runCommandAndLogToConsole("git", ["checkout", "main"]);
       await runCommandAndLogToConsole("git", ["pull", "origin", "main"]);
+      await runCommandAndLogToConsole("git", ["fetch", "--prune"]);
       if (rebase) {
         const { stdout: changes } = await execa`git diff main..${currentBranch}`;
         if (changes) {
@@ -58,7 +59,6 @@ function gitPostMergeCleanup(program: Command) {
           await execa`git checkout ${currentBranch}`;
           process.exit(1);
         }
-        await runCommandAndLogToConsole("git", ["fetch", "--prune"]);
         await runCommandAndLogToConsole("git", ["branch", "-D", currentBranch]);
       } else {
         try {
