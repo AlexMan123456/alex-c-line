@@ -13,12 +13,12 @@
   "scripts": {
     "test": "vitest run",
     "test-watch": "vitest",
-    "format": "prettier --write --parser typescript 'src/**/*.ts' 'tests/**/*.ts' && ESLINT_MODE=fix eslint --fix 'src/**/*.ts' 'tests/**/*.ts'",
-    "lint": "ESLINT_MODE=lint eslint 'src/**/*.ts' 'tests/**/*.ts' && prettier --check --parser typescript 'src/**/*.ts' 'tests/**/*.ts'",
+    "format": "prettier --write --parser typescript \"src/**/*.ts\" \"tests/**/*.ts\" && eslint --fix --suppress-all \"src/**/*.ts\" \"tests/**/*.ts\" && rm -f eslint-suppressions.json",
+    "lint": "tsc --noEmit && eslint \"src/**/*.ts\" \"tests/**/*.ts\" && prettier --check --parser typescript \"src/**/*.ts\" \"tests/**/*.ts\"",
     "build": "tsup",
     "command": "npm run build && echo && echo \"Command output:\" && npx alex-c-line",
     "prepare": "husky",
-    "update-dependencies": "npx npm-check-updates -u && npm install",
+    "update-dependencies": "bash -c 'npx npm-check-updates -u \"$@\" && npm install' --",
     "change-major": "npm version major -m \"Change version number to v%s\"",
     "change-minor": "npm version minor -m \"Change version number to v%s\"",
     "change-patch": "npm version patch -m \"Change version number to v%s\""
@@ -34,7 +34,7 @@
     "execa": "^9.6.0"
   },
   "devDependencies": {
-    "@alextheman/eslint-plugin": "^1.7.0",
+    "@alextheman/eslint-plugin": "^1.8.2",
     "@types/eslint": "^9.6.1",
     "@types/node": "^24.3.0",
     "eslint": "^9.34.0",
