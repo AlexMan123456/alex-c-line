@@ -13,8 +13,8 @@
   "scripts": {
     "test": "vitest run",
     "test-watch": "vitest",
-    "format": "prettier --write --parser typescript 'src/**/*.ts' 'tests/**/*.ts' && ESLINT_MODE=fix eslint --fix 'src/**/*.ts' 'tests/**/*.ts'",
-    "lint": "ESLINT_MODE=lint eslint 'src/**/*.ts' 'tests/**/*.ts' && prettier --check --parser typescript 'src/**/*.ts' 'tests/**/*.ts'",
+    "format": "prettier --write --parser typescript \"src/**/*.ts\" \"tests/**/*.ts\" && eslint --fix --suppress-all \"src/**/*.ts\" \"tests/**/*.ts\" && rm -f eslint-suppressions.json",
+    "lint": "tsc --noEmit && eslint \"src/**/*.ts\" \"tests/**/*.ts\" && prettier --check --parser typescript \"src/**/*.ts\" \"tests/**/*.ts\"",
     "build": "tsup",
     "command": "npm run build && echo && echo \"Command output:\" && npx alex-c-line",
     "prepare": "husky",
