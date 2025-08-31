@@ -28,6 +28,13 @@ jobs:
       run: |
         git config --global user.name "AlexUpBot"
         git config --global user.email "alexupbot@bot.com"
+    - name: Check if pull request to update dependencies already exists
+      run: |
+        PULL_REQUEST_ID=$(gh pr list --state open --head alex-up-bot/update-dependencies --json number --jq '.[].number')
+        if [ -n "$PULL_REQUEST_ID" ]; then
+          echo "Dependency update pull request already exists (#$PULL_REQUEST_ID). Exiting."
+          exit 1
+        fi
     - name: Update dependencies
       run: |
         cp package-lock.json package-lock-backup.json
@@ -42,7 +49,7 @@ jobs:
       uses: peter-evans/create-pull-request@v6
       with:
         token: ${{ secrets.PAT_GITHUB }}
-        branch: update-dependencies
+        branch: alex-up-bot/update-dependencies
         base: main
         commit-message: Update dependencies
         title: "Update dependencies"
