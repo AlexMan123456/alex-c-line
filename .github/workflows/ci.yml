@@ -68,7 +68,7 @@ jobs:
         fi
 
         echo "Version has been updated."
-    - name: Run tests
-      run: npm test
     - name: Run linting checks
       run: npm run lint
+    - name: Run tests
+      run: npm test
