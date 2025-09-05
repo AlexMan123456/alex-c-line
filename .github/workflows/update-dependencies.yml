@@ -1,5 +1,6 @@
 name: Update Dependencies
 on:
+  workflow_dispatch:
   schedule:
   - cron: 0 21 * * 5
 
@@ -35,6 +36,8 @@ jobs:
           echo "Dependency update pull request already exists (#$PULL_REQUEST_ID). Exiting."
           exit 1
         fi
+      env:
+        GH_TOKEN: ${{ secrets.PAT_GITHUB }}
     - name: Update dependencies
       run: |
         cp package-lock.json package-lock-backup.json
