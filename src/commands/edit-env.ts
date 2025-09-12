@@ -33,7 +33,7 @@ function editEnv(program: Command) {
 
       await writeFile(
         path.join(process.cwd(), file),
-        dotenvStringify(currentEnvFileContents) + "\n",
+        `${dotenvStringify(currentEnvFileContents)}\n`,
       );
       console.log(".env file updated");
     });
