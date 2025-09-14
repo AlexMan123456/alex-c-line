@@ -21,7 +21,12 @@ function checkVersionNumberChange(program: Command) {
         process.exit(1);
       }
 
-      const { exitCode } = await execaNoFail("git", ["diff", "origin/main...HEAD", "--quiet"]);
+      const { exitCode } = await execaNoFail("git", [
+        "diff",
+        "origin/main...HEAD",
+        "--quiet",
+        "src/*",
+      ]);
       if (exitCode === 0) {
         console.log("No source code changes found. Version does not need changing.");
         process.exit(0);
