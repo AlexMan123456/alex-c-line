@@ -19,41 +19,7 @@ jobs:
         node-version: [22.x]
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
+    - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+    - uses: AlexMan123456/github-actions/update-dependencies@f9f7f6f0bc1d98e3b89586611cc3a0a2922aa280 # v1.3.7
       with:
-        node-version: ${{ matrix.node-version }}
-        cache: "npm"
-    - name: Setup GitHub user
-      run: |
-        git config --global user.name "AlexUpBot"
-        git config --global user.email "alexupbot@bot.com"
-    - name: Check if pull request to update dependencies already exists
-      run: |
-        PULL_REQUEST_ID=$(gh pr list --state open --head alex-up-bot/update-dependencies --json number --jq '.[].number')
-        if [ -n "$PULL_REQUEST_ID" ]; then
-          echo "Dependency update pull request already exists (#$PULL_REQUEST_ID). Exiting."
-          exit 1
-        fi
-      env:
-        GH_TOKEN: ${{ secrets.PAT_GITHUB }}
-    - name: Update dependencies
-      run: |
-        cp package-lock.json package-lock-backup.json
-        npx npm-check-updates -u
-        if ! npm install; then
-          echo "npm install failed, restoring lockfile"
-          mv package-lock-backup.json package-lock.json
-        else
-          rm -f package-lock-backup.json
-        fi
-    - name: Create Pull Request
-      uses: peter-evans/create-pull-request@v6
-      with:
-        token: ${{ secrets.PAT_GITHUB }}
-        branch: alex-up-bot/update-dependencies
-        base: main
-        commit-message: Update dependencies
-        title: "Update dependencies"
-
+        PAT_GITHUB: ${{ secrets.PAT_GITHUB }}
