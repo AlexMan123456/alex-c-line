@@ -15,11 +15,6 @@ function checkVersionNumberChange(program: Command) {
     )
     .action(async () => {
       console.log("Checking for version change...");
-      const { stdout: currentBranch } = await execa`git branch --show-current`;
-      if (currentBranch === "main") {
-        console.error("❌ ERROR: Cannot check differences on main branch!");
-        process.exit(1);
-      }
 
       const { exitCode } = await execaNoFail("git", [
         "diff",
