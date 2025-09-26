@@ -34,7 +34,7 @@
     "execa": "^9.6.0"
   },
   "devDependencies": {
-    "@alextheman/eslint-plugin": "^1.14.1",
+    "@alextheman/eslint-plugin": "^1.14.2",
     "@types/eslint": "^9.6.1",
     "@types/node": "^24.5.2",
     "eslint": "^9.36.0",
