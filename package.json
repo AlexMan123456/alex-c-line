@@ -1,32 +1,40 @@
 {
   "name": "alex-c-line",
   "version": "1.5.2",
-  "description": "",
+  "description": "Command-line tool with commands to streamline the developer workflow",
+  "license": "ISC",
+  "author": "alextheman",
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
   "bin": {
     "alex-c-line": "dist/index.js"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "test": "vitest run",
-    "test-watch": "vitest",
-    "format": "prettier --write --parser typescript \"src/**/*.ts\" \"tests/**/*.ts\" && eslint --fix --suppress-all \"src/**/*.ts\" \"tests/**/*.ts\" && rm -f eslint-suppressions.json",
-    "lint": "tsc --noEmit && eslint \"src/**/*.ts\" \"tests/**/*.ts\" && prettier --check --parser typescript \"src/**/*.ts\" \"tests/**/*.ts\"",
     "build": "tsup",
-    "command": "npm run build && echo && echo \"Command output:\" && npx alex-c-line",
-    "prepare": "husky",
-    "update-dependencies": "bash -c 'npx npm-check-updates -u \"$@\" && npm install' --",
     "change-major": "npm version major -m \"Change version number to v%s\"",
     "change-minor": "npm version minor -m \"Change version number to v%s\"",
-    "change-patch": "npm version patch -m \"Change version number to v%s\""
+    "change-patch": "npm version patch -m \"Change version number to v%s\"",
+    "command": "npm run build && echo && echo \"Command output:\" && npx alex-c-line",
+    "format": "npm run format-prettier && npm run format-eslint",
+    "format-eslint": "eslint --fix --suppress-all \"package.json\" \"src/**/*.ts\" \"tests/**/*.ts\" && rm -f eslint-suppressions.json",
+    "format-prettier": "npm run format-prettier-typescript && npm run format-prettier-javascript",
+    "format-prettier-javascript": "prettier --write \"./**/*.js\"",
+    "format-prettier-typescript": "prettier --write --parser typescript \"./**/*.ts\"",
+    "lint": "npm run lint-tsc && npm run lint-eslint && npm run lint-prettier",
+    "lint-eslint": "eslint \"package.json\" \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "lint-prettier": "npm run lint-prettier-typescript && npm run lint-prettier-javascript",
+    "lint-prettier-javascript": "prettier --check \"./**.js\"",
+    "lint-prettier-typescript": "prettier --check --parser typescript \"./**/*.ts\"",
+    "lint-tsc": "tsc --noEmit",
+    "prepare": "husky",
+    "test": "vitest run",
+    "test-watch": "vitest",
+    "update-dependencies": "bash -c 'npx npm-check-updates -u \"$@\" && npm install' --"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "module",
   "dependencies": {
     "commander": "^14.0.1",
     "dotenv": "^17.2.3",
