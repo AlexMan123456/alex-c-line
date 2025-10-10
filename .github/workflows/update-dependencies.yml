@@ -20,6 +20,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-    - uses: AlexMan123456/github-actions/update-dependencies@bf3c22d2cd7e4072fd7fbb657df5e5832632371c # v1.4.5
+    - uses: AlexMan123456/github-actions/update-dependencies@9c4fdcd24fe08087706d73c424d579ef8719ae06 # v1.4.12
       with:
         PAT_GITHUB: ${{ secrets.PAT_GITHUB }}
