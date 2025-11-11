@@ -1,6 +1,6 @@
 {
   "name": "alex-c-line",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "Command-line tool with commands to streamline the developer workflow",
   "repository": {
     "type": "git",
@@ -46,7 +46,7 @@
     "execa": "^9.6.0"
   },
   "devDependencies": {
-    "@alextheman/eslint-plugin": "^2.5.0",
+    "@alextheman/eslint-plugin": "^2.7.7",
     "@types/eslint": "^9.6.1",
     "@types/node": "^24.10.0",
     "eslint": "^9.39.1",

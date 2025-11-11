@@ -6,14 +6,17 @@ import checkVersionNumberChange from "src/commands/check-version-number-change";
 import editEnv from "src/commands/edit-env";
 import gitPostMergeCleanup from "src/commands/git-post-merge-cleanup";
 import sayHello from "src/commands/say-hello";
+import loadCommands from "src/utils/loadCommands";
 
-function loadCommands(program: Command) {
-  checkLockfileVersionDiscrepancy(program);
-  checkForFileDependencies(program);
-  checkVersionNumberChange(program);
-  editEnv(program);
-  gitPostMergeCleanup(program);
-  sayHello(program);
+function createCommands(program: Command) {
+  loadCommands(program, {
+    checkForFileDependencies,
+    checkLockfileVersionDiscrepancy,
+    checkVersionNumberChange,
+    editEnv,
+    gitPostMergeCleanup,
+    sayHello,
+  });
 }
 
-export default loadCommands;
+export default createCommands;

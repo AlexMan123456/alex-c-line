@@ -8,13 +8,13 @@ import { execa } from "execa";
 import { execaNoFail } from "src/utils/execa-helpers";
 
 function checkVersionNumberChange(program: Command) {
-  return program
+  program
     .command("check-version-number-change")
     .description(
       "Check that version number on branch has changed if source code differs between main and current branch",
     )
     .action(async () => {
-      console.log("Checking for version change...");
+      console.info("Checking for version change...");
 
       const { exitCode } = await execaNoFail("git", [
         "diff",
@@ -23,7 +23,7 @@ function checkVersionNumberChange(program: Command) {
         "src/*",
       ]);
       if (exitCode === 0) {
-        console.log("No source code changes found. Version does not need changing.");
+        console.info("No source code changes found. Version does not need changing.");
         process.exit(0);
       }
 
@@ -54,7 +54,7 @@ function checkVersionNumberChange(program: Command) {
         process.exit(1);
       }
 
-      console.log("Version has been updated!");
+      console.info("Version has been updated!");
     });
 }
 

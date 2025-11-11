@@ -31,7 +31,7 @@ function checkForFileDependencies(program: Command) {
       "Check for existence of file dependencies in package.json and give exit code 1 if such dependencies are found",
     )
     .action(async () => {
-      console.log("Checking for file dependencies...");
+      console.info("Checking for file dependencies...");
       const { dependencies, devDependencies, peerDependencies } = JSON.parse(
         await readFile(path.resolve(process.cwd(), "package.json"), "utf-8"),
       );
@@ -56,7 +56,7 @@ function checkForFileDependencies(program: Command) {
         console.error(JSON.stringify(allFileDependencies, undefined, 2));
         process.exit(1);
       }
-      console.log("No file dependencies found!");
+      console.info("No file dependencies found!");
       process.exit(0);
     });
 }

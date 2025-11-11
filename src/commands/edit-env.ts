@@ -35,7 +35,7 @@ function editEnv(program: Command) {
         path.join(process.cwd(), file),
         `${dotenvStringify(currentEnvFileContents)}\n`,
       );
-      console.log(".env file updated");
+      console.info(".env file updated");
     });
 }
 
