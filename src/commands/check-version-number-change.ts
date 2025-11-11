@@ -8,7 +8,7 @@ import { execa } from "execa";
 import { execaNoFail } from "src/utils/execa-helpers";
 
 function checkVersionNumberChange(program: Command) {
-  return program
+  program
     .command("check-version-number-change")
     .description(
       "Check that version number on branch has changed if source code differs between main and current branch",
