@@ -2,6 +2,10 @@
   "name": "alex-c-line",
   "version": "1.5.2",
   "description": "Command-line tool with commands to streamline the developer workflow",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlexMan123456/alex-c-line.git"
+  },
   "license": "ISC",
   "author": "alextheman",
   "type": "module",
