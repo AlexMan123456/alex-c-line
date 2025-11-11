@@ -33,7 +33,7 @@ function gitPostMergeCleanup(program: Command) {
       }
       const alexCLineConfig = JSON.parse(alexCLineConfigJSON);
       const rebase = alexCLineConfig["git-post-merge-cleanup"]?.rebase ?? rebaseOption;
-      console.log(`Running git-post-merge-cleanup in ${rebase ? "rebase" : "merge"} mode...`);
+      console.info(`Running git-post-merge-cleanup in ${rebase ? "rebase" : "merge"} mode...`);
 
       const { stdout: currentBranch } = await execa`git branch --show-current`;
       if (currentBranch === "main") {
@@ -66,7 +66,7 @@ function gitPostMergeCleanup(program: Command) {
           and we instead print my own error message. But if it succeeds, we do log the message. */
           const { stdout: branchDeletedMessage } =
             await execa`git branch --delete ${currentBranch}`;
-          console.log(branchDeletedMessage);
+          console.info(branchDeletedMessage);
         } catch (error: unknown) {
           if (error instanceof ExecaError) {
             console.error("❌ ERROR: Changes on branch not fully merged!");

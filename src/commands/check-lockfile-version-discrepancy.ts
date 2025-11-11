@@ -8,7 +8,7 @@ function checkLockfileVersionDiscrepancy(program: Command) {
     .command("check-lockfile-version-discrepancy")
     .description("Check that version numbers in package.json and package-lock.json match")
     .action(() => {
-      console.log("Checking for package.json and package-lock.json discrepancies...");
+      console.info("Checking for package.json and package-lock.json discrepancies...");
       const { version: packageVersion } = JSON.parse(
         readFileSync(path.resolve(process.cwd(), "package.json"), "utf-8"),
       );
@@ -22,7 +22,7 @@ function checkLockfileVersionDiscrepancy(program: Command) {
         process.exitCode = 1;
         return;
       }
-      console.log("package.json and package-lock.json versions in sync.");
+      console.info("package.json and package-lock.json versions in sync.");
     });
 }
 
