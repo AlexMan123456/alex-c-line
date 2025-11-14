@@ -46,18 +46,17 @@
     "execa": "^9.6.0"
   },
   "devDependencies": {
-    "@alextheman/eslint-plugin": "^2.7.7",
+    "@alextheman/eslint-plugin": "^3.0.0",
     "@types/eslint": "^9.6.1",
-    "@types/node": "^24.10.0",
+    "@types/node": "^24.10.1",
     "eslint": "^9.39.1",
-    "eslint-import-resolver-typescript": "^4.4.4",
     "husky": "^9.1.7",
     "prettier": "^3.6.2",
     "tempy": "^3.1.0",
     "ts-node": "^10.9.2",
-    "tsup": "^8.5.0",
+    "tsup": "^8.5.1",
     "typescript": "^5.9.3",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^4.0.8"
+    "vitest": "^4.0.9"
   }
 }
