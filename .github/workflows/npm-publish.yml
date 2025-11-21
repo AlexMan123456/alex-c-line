@@ -12,5 +12,5 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-      - uses: AlexMan123456/github-actions/npm-publish@73544f6e9a88630a2a0aa0036d35f8043491d05e # v2.0.2
+      - uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+      - uses: AlexMan123456/github-actions/npm-publish@0c5c39c256967feb3c4653b65d7f47c0e1b712c7 # v2.1.5
