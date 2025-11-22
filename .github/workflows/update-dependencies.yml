@@ -10,6 +10,7 @@ permissions:
 
 jobs:
   update-dependencies:
+    if: ${{ github.repository == 'AlexMan123456/alex-c-line' }}
     runs-on: ubuntu-latest
     env:
       HUSKY: 0
