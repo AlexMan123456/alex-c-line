@@ -10,6 +10,7 @@
   "author": "alextheman",
   "type": "module",
   "main": "dist/index.js",
+  "module": "dist/index.cjs",
   "types": "dist/index.d.ts",
   "bin": {
     "alex-c-line": "dist/index.js"
