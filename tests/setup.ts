@@ -1,6 +1,6 @@
-import { execa } from "execa";
-import { beforeAll } from "vitest";
+// import { execa } from "execa";
+// import { beforeAll } from "vitest";
 
-beforeAll(async () => {
-  await execa`npm run build`;
-});
+// beforeAll(async () => {
+//   await execa`npm run build`;
+// });
