@@ -1,6 +1,6 @@
 {
   "name": "alex-c-line",
-  "version": "1.5.4",
+  "version": "1.6.0",
   "description": "Command-line tool with commands to streamline the developer workflow",
   "repository": {
     "type": "git",
@@ -10,6 +10,7 @@
   "author": "alextheman",
   "type": "module",
   "main": "dist/index.js",
+  "module": "dist/index.cjs",
   "types": "dist/index.d.ts",
   "bin": {
     "alex-c-line": "dist/index.js"
@@ -18,7 +19,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsup",
+    "build": "tsdown",
     "change-major": "npm version major -m \"Change version number to v%s\"",
     "change-minor": "npm version minor -m \"Change version number to v%s\"",
     "change-patch": "npm version patch -m \"Change version number to v%s\"",
@@ -54,7 +55,7 @@
     "prettier": "^3.6.2",
     "tempy": "^3.1.0",
     "ts-node": "^10.9.2",
-    "tsup": "^8.5.1",
+    "tsdown": "^0.16.6",
     "typescript": "^5.9.3",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^4.0.13"
