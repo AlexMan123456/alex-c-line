@@ -47,17 +47,17 @@
     "execa": "^9.6.0"
   },
   "devDependencies": {
-    "@alextheman/eslint-plugin": "^3.2.1",
+    "@alextheman/eslint-plugin": "^4.2.2",
     "@types/eslint": "^9.6.1",
     "@types/node": "^24.10.1",
     "eslint": "^9.39.1",
     "husky": "^9.1.7",
-    "prettier": "^3.6.2",
+    "prettier": "^3.7.1",
     "tempy": "^3.1.0",
     "ts-node": "^10.9.2",
-    "tsdown": "^0.16.6",
+    "tsdown": "^0.16.8",
     "typescript": "^5.9.3",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^4.0.13"
+    "vitest": "^4.0.14"
   }
 }
