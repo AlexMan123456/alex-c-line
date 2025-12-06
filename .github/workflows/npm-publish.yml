@@ -12,5 +12,28 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
-      - uses: AlexMan123456/github-actions/.github/actions/npm-publish@7cfde49e1e35cf29510a080dadccf249c0dd157b # v2.2.0
+      - name: Checkout the repository
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+      - name: Use Node.js
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org/
+      
+      - name: Use PNPM
+        uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4.2.0
+        with:
+          run_install: false
+      
+      - name: Use latest NPM version
+        run: npm install -g npm@latest
+
+      - name: Install dependencies
+        run: pnpm install
+      
+      - name: Build package
+        run: pnpm run build
+
+      - name: Publish to npm
+        run: npm publish --access public || true
