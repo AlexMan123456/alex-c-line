@@ -23,7 +23,7 @@
     "change-major": "pnpm version major -m \"Change version number to v%s\"",
     "change-minor": "pnpm version minor -m \"Change version number to v%s\"",
     "change-patch": "pnpm version patch -m \"Change version number to v%s\"",
-    "command": "pnpm run build && echo && echo \"Command output:\" && npx alex-c-line",
+    "command": "pnpm run build && echo && echo \"Command output:\" && node dist/index.js",
     "format": "pnpm run format-prettier && pnpm run format-eslint",
     "format-eslint": "eslint --fix --suppress-all \"package.json\" \"src/**/*.ts\" \"tests/**/*.ts\" && rm -f eslint-suppressions.json",
     "format-prettier": "pnpm run format-prettier-typescript && pnpm run format-prettier-javascript",
