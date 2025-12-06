@@ -6,6 +6,7 @@ if git diff --cached --quiet; then
   exit 0
 fi
 
+pnpm run build
 pnpm run format
 pnpm run lint
 pnpm test
