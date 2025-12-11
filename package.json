@@ -36,9 +36,13 @@
     "lint-prettier-typescript": "prettier --check --parser typescript \"./**/*.ts\"",
     "lint-tsc": "tsc --noEmit",
     "prepare": "husky",
+    "prepare-live-eslint-plugin": "pnpm uninstall @alextheman/eslint-plugin && pnpm install --save-dev @alextheman/eslint-plugin",
+    "prepare-local-eslint-plugin": "dotenv -e .env -- sh -c 'ESLINT_PLUGIN_PATH=${LOCAL_ESLINT_PLUGIN_PATH:-../eslint-plugin}; pnpm --prefix \"$ESLINT_PLUGIN_PATH\" run build && pnpm uninstall @alextheman/eslint-plugin && pnpm install --save-dev file:\"$ESLINT_PLUGIN_PATH\"'",
     "test": "vitest run",
     "test-watch": "vitest",
-    "update-dependencies": "pnpm update --latest && pnpm update"
+    "update-dependencies": "pnpm update --latest && pnpm update",
+    "use-live-eslint-plugin": "pnpm run prepare-live-eslint-plugin && pnpm run lint",
+    "use-local-eslint-plugin": "pnpm run prepare-local-eslint-plugin && pnpm run lint"
   },
   "dependencies": {
     "commander": "^14.0.2",
