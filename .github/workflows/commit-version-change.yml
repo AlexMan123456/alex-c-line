@@ -1,0 +1,28 @@
+name: Commit a version change
+on:
+  workflow_dispatch:
+    inputs:
+      version-type:
+        description: The version type to change
+        required: true
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+        default: patch
+      message:
+        description: Release message
+        required: false
+
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  commit-version-change:
+    if: ${{ github.repository == 'AlexMan123456/alex-c-line' }}
+    uses: AlexMan123456/github-actions/.github/workflows/commit-version-change.yml@f81c1003e5772bf69a37fdb4ea0f8c084ce3bc20 # v2.11.2
+    secrets:
+      PAT_GITHUB: ${{ secrets.PAT_GITHUB }}
