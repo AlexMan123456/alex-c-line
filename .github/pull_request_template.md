@@ -12,3 +12,4 @@ Please select the option that best describes your changes:
 
 In some cases, your pull request may be doing more than one of these. In this case, please select a template from the top-down.
 For example, if you are introducing a new feature but also making changes to tooling, please select `New Feature` as that comes before tooling in the list.
+This ensures that the most impactful aspect of the change is reflected.
