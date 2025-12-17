@@ -20,10 +20,10 @@
   ],
   "scripts": {
     "build": "tsdown",
-    "change-major": "pnpm version major -m \"Change version number to v%s\"",
-    "change-minor": "pnpm version minor -m \"Change version number to v%s\"",
-    "change-patch": "pnpm version patch -m \"Change version number to v%s\"",
-    "command": "pnpm run build && echo && echo \"Command output:\" && node dist/index.js",
+    "command": "bash -c 'pnpm run build && echo && echo \"Command output:\" && node dist/index.js $@' --",
+    "create-release-note-major": "pnpm run command create-release-note major",
+    "create-release-note-minor": "pnpm run command create-release-note minor",
+    "create-release-note-patch": "pnpm run command create-release-note patch",
     "format": "pnpm run format-prettier && pnpm run format-eslint",
     "format-eslint": "eslint --fix --suppress-all \"package.json\" \"src/**/*.ts\" \"tests/**/*.ts\" && rm -f eslint-suppressions.json",
     "format-prettier": "pnpm run format-prettier-typescript && pnpm run format-prettier-javascript",
@@ -45,6 +45,7 @@
     "use-local-eslint-plugin": "pnpm run prepare-local-eslint-plugin && pnpm run lint"
   },
   "dependencies": {
+    "@alextheman/utility": "^3.10.0",
     "commander": "^14.0.2",
     "dotenv": "^17.2.3",
     "dotenv-stringify": "^3.0.1",
