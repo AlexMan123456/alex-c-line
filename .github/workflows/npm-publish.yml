@@ -11,4 +11,4 @@ on:
 jobs:
   publish:
     if: ${{ github.repository == 'AlexMan123456/alex-c-line' }}
-    uses: AlexMan123456/github-actions/.github/workflows/npm-registry-publish.yml@1425d0703313d1ae704a7a2d7c01202bc6f36652 # v2.4.3
+    uses: AlexMan123456/github-actions/.github/workflows/npm-registry-publish.yml@030badcc6072a9ed75003761be464e6641f63cf4 # v2.13.0
