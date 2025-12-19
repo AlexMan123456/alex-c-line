@@ -1,15 +1,17 @@
+import { determineVersionType, kebabToCamel, normaliseIndents } from "@alextheman/utility";
+import { ExecaError } from "execa";
+import { temporaryDirectoryTask } from "tempy";
+import { describe, expect, test } from "vitest";
+
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
-import { determineVersionType, kebabToCamel, normaliseIndents } from "@alextheman/utility";
-import { ExecaError } from "execa";
-import { name, version } from "package.json" with { type: "json" };
-import { temporaryDirectoryTask } from "tempy";
 import { createAlexCLineTestClientInDirectory } from "tests/test-clients/alex-c-line-test-client";
-import { describe, expect, test } from "vitest";
 
 import getReleaseNoteTemplate from "src/utils/getReleaseNoteTemplate";
 import getReleaseSummary, { getMajorReleaseSummary } from "src/utils/getReleaseSummary";
+
+import { name, version } from "package.json" with { type: "json" };
 
 describe("set-release-status", () => {
   test("Takes a file path to a valid release note and sets the status to released", async () => {

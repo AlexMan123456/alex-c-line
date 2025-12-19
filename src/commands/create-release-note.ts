@@ -1,15 +1,15 @@
 import type { VersionType } from "@alextheman/utility";
 import type { Command } from "commander";
 
-import { mkdir, readFile, writeFile } from "node:fs/promises";
-import path from "node:path";
-
 import {
   determineVersionType,
   parseVersion,
   parseVersionType,
   incrementVersion,
 } from "@alextheman/utility";
+
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import path from "node:path";
 
 import getReleaseNoteTemplate from "src/utils/getReleaseNoteTemplate";
 

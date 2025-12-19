@@ -1,10 +1,11 @@
+import { ExecaError } from "execa";
+import { temporaryDirectoryTask } from "tempy";
+import { describe, expect, test } from "vitest";
+
 import { writeFile } from "fs/promises";
 import path from "path";
 
-import { ExecaError } from "execa";
-import { temporaryDirectoryTask } from "tempy";
 import { createAlexCLineTestClientInDirectory } from "tests/test-clients/alex-c-line-test-client";
-import { describe, expect, test } from "vitest";
 
 describe("check-for-file-dependencies", () => {
   test("Exits with exit code 0 if no file dependencies found", async () => {
