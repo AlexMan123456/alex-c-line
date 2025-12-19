@@ -1,4 +1,9 @@
-import { determineVersionType, kebabToCamel, normaliseIndents } from "@alextheman/utility";
+import {
+  determineVersionType,
+  kebabToCamel,
+  normaliseIndents,
+  parseVersion,
+} from "@alextheman/utility";
 
 import getReleaseSummary from "src/utils/getReleaseSummary";
 
@@ -11,7 +16,7 @@ function isValidReleaseDocument(
 
   return (
     initialDocument.startsWith(normaliseIndents`
-            # v${version} (${kebabToCamel(versionType, { startWithUpper: true })} Release)
+            # ${parseVersion(version)} (${kebabToCamel(versionType, { startWithUpper: true })} Release)
             
             **Status**: In progress
             `) &&
