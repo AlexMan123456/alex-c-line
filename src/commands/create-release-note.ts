@@ -6,11 +6,12 @@ import path from "node:path";
 
 import {
   determineVersionType,
-  normaliseIndents,
   parseVersion,
   parseVersionType,
   incrementVersion,
 } from "@alextheman/utility";
+
+import getReleaseNoteTemplate from "src/utils/getReleaseNoteTemplate";
 
 function createReleaseNote(program: Command) {
   program
@@ -34,53 +35,7 @@ function createReleaseNote(program: Command) {
       const releaseNotePath = `${releaseNoteDirectory}/${resolvedVersion}.md`;
       const fullReleaseNotePath = path.join(process.cwd(), releaseNotePath);
 
-      const releaseNoteTemplate = {
-        major: normaliseIndents`
-                # ${resolvedVersion} (Major Release)
-
-                **Status**: In progress
-
-                This is a new major release of the \`${name}\` package. It has the potential to introduce breaking changes that may require a large amount of refactoring. Please read the below description of changes and migration notes for more information.
-
-                ## Description of Changes
-
-                Description here
-
-                ## Migration Notes
-
-                Migration notes here
-            `,
-        minor: normaliseIndents`
-                # ${resolvedVersion} (Minor Release)
-
-                **Status**: In progress
-
-                This is a new minor release of the \`${name}\` package. It introduces new features in a backwards-compatible way that should require very little refactoring, if any. Please read below the description of changes.
-
-                ## Description of Changes
-
-                Description here
-
-                ## Additional Notes
-
-                Additional notes here
-            `,
-        patch: normaliseIndents`
-                # ${resolvedVersion} (Patch Release)
-
-                **Status**: In progress
-
-                This is a new patch release of the \`${name}\` package. It fixes issues with the package in a way that should require no refactoring. Please read below the description of changes.
-
-                ## Description of Changes
-
-                Description here
-
-                ## Additional Notes
-
-                Additional notes here
-            `,
-      }[resolvedVersionType];
+      const releaseNoteTemplate = getReleaseNoteTemplate(name, resolvedVersion, "In progress");
 
       try {
         await mkdir(path.dirname(fullReleaseNotePath), { recursive: true });

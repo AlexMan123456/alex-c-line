@@ -7,6 +7,7 @@ import createReleaseNote from "src/commands/create-release-note";
 import editEnv from "src/commands/edit-env";
 import gitPostMergeCleanup from "src/commands/git-post-merge-cleanup";
 import sayHello from "src/commands/say-hello";
+import setReleaseStatus from "src/commands/set-release-status";
 import loadCommands from "src/utils/loadCommands";
 
 function createCommands(program: Command) {
@@ -18,6 +19,7 @@ function createCommands(program: Command) {
     editEnv,
     gitPostMergeCleanup,
     sayHello,
+    setReleaseStatus,
   });
 }
 
