@@ -39,7 +39,6 @@ describe("set-release-status", () => {
       const { exitCode: setReleaseStatusExitCode } = await alexCLineTestClient(
         "set-release-status",
         [`docs/releases/${versionType}/v${version}.md`],
-        { stdout: "inherit" },
       );
       expect(setReleaseStatusExitCode).toBe(0);
 
