@@ -1,12 +1,14 @@
+import { determineVersionType } from "@alextheman/utility";
+import { ExecaError } from "execa";
+import { temporaryDirectoryTask } from "tempy";
+import { describe, expect, test } from "vitest";
+
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
-import { determineVersionType } from "@alextheman/utility";
-import { ExecaError } from "execa";
-import { name, version } from "package.json" with { type: "json" };
-import { temporaryDirectoryTask } from "tempy";
 import { createAlexCLineTestClientInDirectory } from "tests/test-clients/alex-c-line-test-client";
-import { describe, expect, test } from "vitest";
+
+import { name, version } from "package.json" with { type: "json" };
 
 describe("create-release-notes", () => {
   test("The resulting release notes at least has the version number and description of changes", async () => {

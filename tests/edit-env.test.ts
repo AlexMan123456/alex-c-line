@@ -1,11 +1,12 @@
-import { readFile, writeFile } from "fs/promises";
-import path from "path";
-
 import dotenv from "dotenv";
 import dotenvStringify from "dotenv-stringify";
 import { temporaryDirectoryTask } from "tempy";
-import { createAlexCLineTestClient } from "tests/test-clients/alex-c-line-test-client";
 import { describe, expect, test } from "vitest";
+
+import { readFile, writeFile } from "fs/promises";
+import path from "path";
+
+import { createAlexCLineTestClient } from "tests/test-clients/alex-c-line-test-client";
 
 describe("edit-env", () => {
   test("Adds property to .env", async () => {

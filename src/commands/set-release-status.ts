@@ -1,9 +1,9 @@
 import type { Command } from "commander";
 
+import { parseVersion } from "@alextheman/utility";
+
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-
-import { parseVersion } from "@alextheman/utility";
 
 import isValidReleaseDocument from "src/utils/isValidReleaseDocument";
 

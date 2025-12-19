@@ -1,10 +1,10 @@
 import type { Command } from "commander";
 
-import { readFile, writeFile } from "fs/promises";
-import path from "path";
-
 import dotenv from "dotenv";
 import dotenvStringify from "dotenv-stringify";
+
+import { readFile, writeFile } from "fs/promises";
+import path from "path";
 
 function editEnv(program: Command) {
   program

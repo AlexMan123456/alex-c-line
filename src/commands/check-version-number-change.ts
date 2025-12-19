@@ -1,9 +1,9 @@
 import type { Command } from "commander";
 
+import { execa } from "execa";
+
 import { readFile } from "fs/promises";
 import path from "path";
-
-import { execa } from "execa";
 
 import { execaNoFail } from "src/utils/execa-helpers";
 

@@ -1,10 +1,10 @@
 import type { Command } from "commander";
 
+import { execa, ExecaError } from "execa";
+
 import { readFile } from "fs/promises";
 import os from "os";
 import path from "path";
-
-import { execa, ExecaError } from "execa";
 
 import { createExecaClientWithDefaultOptions } from "src/utils/execa-helpers";
 
