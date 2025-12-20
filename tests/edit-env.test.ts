@@ -3,8 +3,8 @@ import dotenvStringify from "dotenv-stringify";
 import { temporaryDirectoryTask } from "tempy";
 import { describe, expect, test } from "vitest";
 
-import { readFile, writeFile } from "fs/promises";
-import path from "path";
+import { readFile, writeFile } from "node:fs/promises";
+import path from "node:path";
 
 import { createAlexCLineTestClient } from "tests/test-clients/alex-c-line-test-client";
 

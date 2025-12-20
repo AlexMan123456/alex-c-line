@@ -1,7 +1,7 @@
 import type { Command } from "commander";
 
-import { readFileSync } from "fs";
-import path from "path";
+import { readFileSync } from "node:fs";
+import path from "node:path";
 
 function checkLockfileVersionDiscrepancy(program: Command) {
   program

@@ -2,9 +2,9 @@ import type { Command } from "commander";
 
 import { execa, ExecaError } from "execa";
 
-import { readFile } from "fs/promises";
-import os from "os";
-import path from "path";
+import { readFile } from "node:fs/promises";
+import os from "node:os";
+import path from "node:path";
 
 import { createExecaClientWithDefaultOptions } from "src/utils/execa-helpers";
 
