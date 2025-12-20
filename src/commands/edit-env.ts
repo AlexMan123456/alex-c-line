@@ -3,8 +3,8 @@ import type { Command } from "commander";
 import dotenv from "dotenv";
 import dotenvStringify from "dotenv-stringify";
 
-import { readFile, writeFile } from "fs/promises";
-import path from "path";
+import { readFile, writeFile } from "node:fs/promises";
+import path from "node:path";
 
 function editEnv(program: Command) {
   program

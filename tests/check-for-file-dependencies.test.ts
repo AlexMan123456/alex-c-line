@@ -2,8 +2,8 @@ import { ExecaError } from "execa";
 import { temporaryDirectoryTask } from "tempy";
 import { describe, expect, test } from "vitest";
 
-import { writeFile } from "fs/promises";
-import path from "path";
+import { writeFile } from "node:fs/promises";
+import path from "node:path";
 
 import { createAlexCLineTestClientInDirectory } from "tests/test-clients/alex-c-line-test-client";
 

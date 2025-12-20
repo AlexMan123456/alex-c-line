@@ -2,8 +2,8 @@ import type { Options } from "execa";
 
 import { execa } from "execa";
 
-import { writeFile } from "fs/promises";
-import path from "path";
+import { writeFile } from "node:fs/promises";
+import path from "node:path";
 
 export function createGitTestClient(repository: string) {
   return async (command: string, args?: string[], options?: Omit<Options, "cwd">) => {

@@ -2,7 +2,7 @@ import type { Options } from "execa";
 
 import { execa } from "execa";
 
-import path from "path";
+import path from "node:path";
 
 async function alexCLineTestClient(command: string, args?: string[], options?: Options) {
   const localDistDirectory = path.resolve(process.cwd(), "dist");

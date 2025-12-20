@@ -2,8 +2,8 @@ import type { Command } from "commander";
 
 import { execa } from "execa";
 
-import { readFile } from "fs/promises";
-import path from "path";
+import { readFile } from "node:fs/promises";
+import path from "node:path";
 
 import { execaNoFail } from "src/utils/execa-helpers";
 
