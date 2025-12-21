@@ -16,9 +16,10 @@ function gitPostMergeCleanup(program: Command) {
   program
     .command("git-post-merge-cleanup")
     .alias("git-cleanup")
-    .description("Run after merging into main to quickly clean up")
+    .description("Run after merging into a given branch to quickly clean up")
+    .argument("[branch]", "The branch you want to merge into", "main")
     .option("--rebase", "Enable if your repository mainly rebases into main")
-    .action(async ({ rebase: rebaseOption }: Options) => {
+    .action(async (branch: string, { rebase: rebaseOption }: Options) => {
       let alexCLineConfigJSON;
       try {
         alexCLineConfigJSON = await readFile(
@@ -36,8 +37,8 @@ function gitPostMergeCleanup(program: Command) {
       console.info(`Running git-post-merge-cleanup in ${rebase ? "rebase" : "merge"} mode...`);
 
       const { stdout: currentBranch } = await execa`git branch --show-current`;
-      if (currentBranch === "main") {
-        console.error("❌ ERROR: Cannot run cleanup on main branch!");
+      if (currentBranch === branch) {
+        console.error(`❌ ERROR: Cannot run cleanup on ${branch} branch!`);
         process.exitCode = 1;
         return;
       }
@@ -46,14 +47,14 @@ function gitPostMergeCleanup(program: Command) {
       });
 
       if (rebase) {
-        await runCommandAndLogToConsole("git", ["fetch", "origin", "main"]);
-        await runCommandAndLogToConsole("git", ["pull", "origin", "main"]);
+        await runCommandAndLogToConsole("git", ["fetch", "origin", branch]);
+        await runCommandAndLogToConsole("git", ["pull", "origin", branch]);
       }
-      await runCommandAndLogToConsole("git", ["checkout", "main"]);
-      await runCommandAndLogToConsole("git", ["pull", "origin", "main"]);
+      await runCommandAndLogToConsole("git", ["checkout", branch]);
+      await runCommandAndLogToConsole("git", ["pull", "origin", branch]);
       await runCommandAndLogToConsole("git", ["fetch", "--prune"]);
       if (rebase) {
-        const { stdout: changes } = await execa`git diff main..${currentBranch}`;
+        const { stdout: changes } = await execa`git diff ${branch}..${currentBranch}`;
         if (changes) {
           console.error("❌ ERROR: Changes on branch not fully merged!");
           await execa`git checkout ${currentBranch}`;
