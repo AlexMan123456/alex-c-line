@@ -37,12 +37,16 @@
     "lint-tsc": "tsc --noEmit",
     "prepare": "husky",
     "prepare-live-eslint-plugin": "pnpm uninstall @alextheman/eslint-plugin && pnpm install --save-dev @alextheman/eslint-plugin",
+    "prepare-live-utility": "pnpm uninstall @alextheman/utility && pnpm install @alextheman/utility",
     "prepare-local-eslint-plugin": "dotenv -e .env -- sh -c 'ESLINT_PLUGIN_PATH=${LOCAL_ESLINT_PLUGIN_PATH:-../eslint-plugin}; pnpm --prefix \"$ESLINT_PLUGIN_PATH\" run build && pnpm uninstall @alextheman/eslint-plugin && pnpm install --save-dev file:\"$ESLINT_PLUGIN_PATH\"'",
+    "prepare-local-utility": "dotenv -e .env -- sh -c 'UTILITY_PATH=${LOCAL_UTILITY_PATH:-../utility}; pnpm --prefix \"$UTILITY_PATH\" run build && pnpm uninstall @alextheman/utility && pnpm install file:\"$UTILITY_PATH\"'",
     "test": "pnpm run build && vitest run",
     "test-watch": "pnpm run build && vitest",
     "update-dependencies": "pnpm update --latest && pnpm update",
     "use-live-eslint-plugin": "pnpm run prepare-live-eslint-plugin && pnpm run lint",
-    "use-local-eslint-plugin": "pnpm run prepare-local-eslint-plugin && pnpm run lint"
+    "use-live-utility": "pnpm run prepare-live-utility",
+    "use-local-eslint-plugin": "pnpm run prepare-local-eslint-plugin && pnpm run lint",
+    "use-local-utility": "pnpm run prepare-local-utility"
   },
   "dependencies": {
     "@alextheman/utility": "^4.0.0",
