@@ -1,12 +1,7 @@
 import type { VersionType } from "@alextheman/utility";
 import type { Command } from "commander";
 
-import {
-  determineVersionType,
-  parseVersion,
-  parseVersionType,
-  incrementVersion,
-} from "@alextheman/utility";
+import { parseVersionType, VersionNumber } from "@alextheman/utility";
 
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -26,16 +21,16 @@ function createReleaseNote(program: Command) {
         await readFile(path.join(process.cwd(), "package.json"), "utf-8"),
       );
 
-      const resolvedVersion = versionType
-        ? incrementVersion(parseVersion(version), parseVersionType(versionType))
-        : parseVersion(version);
-      const resolvedVersionType = determineVersionType(resolvedVersion);
+      const versionNumber = versionType
+        ? new VersionNumber(version).increment(parseVersionType(versionType))
+        : new VersionNumber(version);
+      const resolvedVersionType = versionNumber.type;
 
       const releaseNoteDirectory = `docs/releases/${resolvedVersionType}`;
-      const releaseNotePath = `${releaseNoteDirectory}/${resolvedVersion}.md`;
+      const releaseNotePath = `${releaseNoteDirectory}/${versionNumber}.md`;
       const fullReleaseNotePath = path.join(process.cwd(), releaseNotePath);
 
-      const releaseNoteTemplate = getReleaseNoteTemplate(name, resolvedVersion, "In progress");
+      const releaseNoteTemplate = getReleaseNoteTemplate(name, versionNumber, "In progress");
 
       try {
         await mkdir(path.dirname(fullReleaseNotePath), { recursive: true });
@@ -48,7 +43,7 @@ function createReleaseNote(program: Command) {
           throw error;
         }
       }
-      console.info(`Release notes for ${resolvedVersion} have been created in ${releaseNotePath}`);
+      console.info(`Release notes for ${versionNumber} have been created in ${releaseNotePath}`);
     });
 }
 

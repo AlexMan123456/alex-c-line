@@ -1,6 +1,6 @@
 import type { Command } from "commander";
 
-import { parseVersion } from "@alextheman/utility";
+import { VersionNumber } from "@alextheman/utility";
 
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -30,12 +30,12 @@ function setReleaseStatus(program: Command) {
           return part !== "md";
         })
         .join(".");
-      const parsedVersion = parseVersion(version);
+      const versionNumber = new VersionNumber(version);
 
       const fullDocumentPath = path.join(process.cwd(), documentPath);
       const initialDocument = await readFile(fullDocumentPath, "utf-8");
 
-      if (!isValidReleaseDocument(packageName, parsedVersion, initialDocument)) {
+      if (!isValidReleaseDocument(packageName, versionNumber, initialDocument)) {
         console.error("❌ ERROR: Document does not match a valid release note template.");
         process.exit(1);
       }
