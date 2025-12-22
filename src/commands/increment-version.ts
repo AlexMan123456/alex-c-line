@@ -1,11 +1,6 @@
 import type { Command } from "commander";
 
-import {
-  incrementVersion as incrementVersionUtility,
-  normaliseIndents,
-  parseVersion,
-  parseVersionType,
-} from "@alextheman/utility";
+import { normaliseIndents, parseVersionType, VersionNumber } from "@alextheman/utility";
 
 interface IncrementVersionOptions {
   prefix?: boolean;
@@ -33,9 +28,9 @@ function incrementVersion(program: Command) {
     )
     .action((version: string, incrementType: string, { prefix }: IncrementVersionOptions) => {
       console.info(
-        incrementVersionUtility(parseVersion(version), parseVersionType(incrementType), {
-          omitPrefix: !prefix,
-        }),
+        new VersionNumber(version)
+          .increment(parseVersionType(incrementType))
+          .toString({ omitPrefix: !prefix }),
       );
     });
 }

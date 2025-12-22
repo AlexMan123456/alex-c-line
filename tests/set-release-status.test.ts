@@ -1,4 +1,4 @@
-import { determineVersionType, kebabToCamel, normaliseIndents } from "@alextheman/utility";
+import { kebabToCamel, normaliseIndents, VersionNumber } from "@alextheman/utility";
 import { ExecaError } from "execa";
 import { temporaryDirectoryTask } from "tempy";
 import { describe, expect, test } from "vitest";
@@ -17,7 +17,7 @@ describe("set-release-status", () => {
   test("Takes a file path to a valid release note and sets the status to released", async () => {
     await temporaryDirectoryTask(async (temporaryPath) => {
       const alexCLineTestClient = createAlexCLineTestClientInDirectory(temporaryPath);
-      const versionType = determineVersionType(version);
+      const versionNumber = new VersionNumber(version);
 
       await writeFile(
         path.join(temporaryPath, "package.json"),
@@ -32,7 +32,7 @@ describe("set-release-status", () => {
       expect(createReleaseNoteExitCode).toBe(0);
 
       const fileContentsBeforeWrite = await readFile(
-        path.join(temporaryPath, `docs/releases/${versionType}/v${version}.md`),
+        path.join(temporaryPath, `docs/releases/${versionNumber.type}/v${version}.md`),
         "utf-8",
       );
       expect(fileContentsBeforeWrite).toContain(`v${version}`);
@@ -40,12 +40,12 @@ describe("set-release-status", () => {
 
       const { exitCode: setReleaseStatusExitCode } = await alexCLineTestClient(
         "set-release-status",
-        [`docs/releases/${versionType}/v${version}.md`],
+        [`docs/releases/${versionNumber.type}/v${version}.md`],
       );
       expect(setReleaseStatusExitCode).toBe(0);
 
       const fileContentsAfterWrite = await readFile(
-        path.join(temporaryPath, `docs/releases/${versionType}/v${version}.md`),
+        path.join(temporaryPath, `docs/releases/${versionNumber.type}/v${version}.md`),
         "utf-8",
       );
       expect(fileContentsAfterWrite).toContain("**Status**: Released");
@@ -55,7 +55,7 @@ describe("set-release-status", () => {
   test("Only replaces the first occurrence of the status", async () => {
     await temporaryDirectoryTask(async (temporaryPath) => {
       const alexCLineTestClient = createAlexCLineTestClientInDirectory(temporaryPath);
-      const versionType = determineVersionType(version);
+      const versionType = new VersionNumber(version).type;
       const documentPath = `docs/releases/${versionType}/v${version}.md`;
 
       await writeFile(
@@ -69,7 +69,7 @@ describe("set-release-status", () => {
       await mkdir(path.dirname(path.join(temporaryPath, documentPath)), { recursive: true });
       await writeFile(
         path.join(temporaryPath, documentPath),
-        getReleaseNoteTemplate(name, version, "In progress", {
+        getReleaseNoteTemplate(name, new VersionNumber(version), "In progress", {
           descriptionOfChanges: "**Status**: In progress",
         }),
       );
@@ -97,13 +97,13 @@ describe("set-release-status", () => {
     [
       "Has version title but not status",
       normaliseIndents`
-            # v${version} (${kebabToCamel(determineVersionType(version), { startWithUpper: true })} Release)
+            # v${version} (${kebabToCamel(new VersionNumber(version).type, { startWithUpper: true })} Release)
         `,
     ],
     [
       "Has version title and status, but status is not in progress",
       normaliseIndents`
-            # v${version} (${kebabToCamel(determineVersionType(version), { startWithUpper: true })} Release)
+            # v${version} (${kebabToCamel(new VersionNumber(version).type, { startWithUpper: true })} Release)
 
             **Status**: Invalid
         `,
@@ -111,7 +111,7 @@ describe("set-release-status", () => {
     [
       "Has version, title and status, but summary is invalid",
       normaliseIndents`
-        # v${version} (${kebabToCamel(determineVersionType(version), { startWithUpper: true })} Release)
+        # v${version} (${kebabToCamel(new VersionNumber(version).type, { startWithUpper: true })} Release)
 
         **Status**: In progress
 
@@ -121,11 +121,11 @@ describe("set-release-status", () => {
     [
       "Has version title, status, and valid summary, but no description of changes",
       normaliseIndents`
-        # v${version} (${kebabToCamel(determineVersionType(version), { startWithUpper: true })} Release)
+        # v${version} (${kebabToCamel(new VersionNumber(version).type, { startWithUpper: true })} Release)
 
         **Status**: In progress
 
-        ${getReleaseSummary(name, version)}
+        ${getReleaseSummary(name, new VersionNumber(version))}
     `,
     ],
     [
@@ -145,7 +145,7 @@ describe("set-release-status", () => {
   ])("Does not operate on invalid markdown (%s)", async (_: string, documentContents: string) => {
     await temporaryDirectoryTask(async (temporaryPath) => {
       const alexCLineTestClient = createAlexCLineTestClientInDirectory(temporaryPath);
-      const versionType = determineVersionType(version);
+      const versionType = new VersionNumber(version).type;
       const documentPath = `docs/releases/${versionType}/v${version}.md`;
 
       await writeFile(

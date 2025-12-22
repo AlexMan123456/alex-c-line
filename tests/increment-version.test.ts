@@ -1,4 +1,4 @@
-import { incrementVersion } from "@alextheman/utility";
+import { VersionNumber } from "@alextheman/utility";
 import { ExecaError } from "execa";
 import { describe, expect, test } from "vitest";
 
@@ -14,7 +14,7 @@ describe("incrementVersion", () => {
         [version, "major"],
       );
       expect(majorExitCode).toBe(0);
-      expect(newMajorVersion).toBe(incrementVersion(version, "major"));
+      expect(newMajorVersion).toBe(new VersionNumber(version).increment("major").toString());
     });
 
     test("Minor", async () => {
@@ -23,7 +23,7 @@ describe("incrementVersion", () => {
         [version, "minor"],
       );
       expect(minorExitCode).toBe(0);
-      expect(newMinorVersion).toBe(incrementVersion(version, "minor"));
+      expect(newMinorVersion).toBe(new VersionNumber(version).increment("minor").toString());
     });
 
     test("Patch", async () => {
@@ -32,7 +32,7 @@ describe("incrementVersion", () => {
         [version, "patch"],
       );
       expect(patchExitCode).toBe(0);
-      expect(newPatchVersion).toBe(incrementVersion(version, "patch"));
+      expect(newPatchVersion).toBe(new VersionNumber(version).increment("patch").toString());
     });
   });
 
@@ -71,6 +71,8 @@ describe("incrementVersion", () => {
       "--no-prefix",
     ]);
     expect(exitCode).toBe(0);
-    expect(newVersion).toBe(incrementVersion(version, "major", { omitPrefix: true }));
+    expect(newVersion).toBe(
+      new VersionNumber(version).increment("major").toString({ omitPrefix: true }),
+    );
   });
 });

@@ -49,7 +49,7 @@
     "use-local-utility": "pnpm run prepare-local-utility"
   },
   "dependencies": {
-    "@alextheman/utility": "^4.0.0",
+    "@alextheman/utility": "^4.2.1",
     "commander": "^14.0.2",
     "dotenv": "^17.2.3",
     "dotenv-stringify": "^3.0.1",

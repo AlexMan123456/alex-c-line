@@ -1,4 +1,6 @@
-import { determineVersionType, normaliseIndents, parseVersion } from "@alextheman/utility";
+import type { VersionNumber } from "@alextheman/utility";
+
+import { normaliseIndents } from "@alextheman/utility";
 
 import {
   getMajorReleaseSummary,
@@ -15,7 +17,7 @@ export interface ReleaseNoteContents {
 
 function getReleaseNoteTemplate(
   packageName: string,
-  version: string,
+  version: VersionNumber,
   status: ReleaseStatus = "In progress",
   contents?: ReleaseNoteContents,
 ) {
@@ -23,11 +25,9 @@ function getReleaseNoteTemplate(
   const migrationNotes = contents?.notes ?? "Migration notes here";
   const additionalNotes = contents?.notes ?? "Additional notes here";
 
-  const parsedVersion = parseVersion(version);
-
   return {
     major: normaliseIndents`
-                # ${parsedVersion} (Major Release)
+                # ${version.toString()} (Major Release)
 
                 **Status**: ${status}
 
@@ -42,7 +42,7 @@ function getReleaseNoteTemplate(
                 ${migrationNotes}
             `,
     minor: normaliseIndents`
-                # ${parsedVersion} (Minor Release)
+                # ${version.toString()} (Minor Release)
 
                 **Status**: ${status}
 
@@ -57,7 +57,7 @@ function getReleaseNoteTemplate(
                 ${additionalNotes}
             `,
     patch: normaliseIndents`
-                # ${parsedVersion} (Patch Release)
+                # ${version.toString()} (Patch Release)
 
                 **Status**: ${status}
 
@@ -71,7 +71,7 @@ function getReleaseNoteTemplate(
 
                 ${additionalNotes}
             `,
-  }[determineVersionType(version)];
+  }[version.type];
 }
 
 export default getReleaseNoteTemplate;

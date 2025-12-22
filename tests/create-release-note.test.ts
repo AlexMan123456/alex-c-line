@@ -1,4 +1,4 @@
-import { determineVersionType } from "@alextheman/utility";
+import { VersionNumber } from "@alextheman/utility";
 import { ExecaError } from "execa";
 import { temporaryDirectoryTask } from "tempy";
 import { describe, expect, test } from "vitest";
@@ -14,7 +14,7 @@ describe("create-release-notes", () => {
   test("The resulting release notes at least has the version number and description of changes", async () => {
     await temporaryDirectoryTask(async (temporaryPath) => {
       const alexCLineTestClient = createAlexCLineTestClientInDirectory(temporaryPath);
-      const versionType = determineVersionType(version);
+      const versionType = new VersionNumber(version).type;
 
       await writeFile(
         path.join(temporaryPath, "package.json"),
