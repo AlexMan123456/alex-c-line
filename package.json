@@ -49,7 +49,7 @@
     "use-local-utility": "pnpm run prepare-local-utility"
   },
   "dependencies": {
-    "@alextheman/utility": "^4.2.1",
+    "@alextheman/utility": "^4.3.5",
     "commander": "^14.0.2",
     "dotenv": "^17.2.3",
     "dotenv-stringify": "^3.0.1",
@@ -57,21 +57,21 @@
     "update-notifier": "^7.3.1"
   },
   "devDependencies": {
-    "@alextheman/eslint-plugin": "^4.10.0",
+    "@alextheman/eslint-plugin": "^5.4.0",
     "@types/eslint": "^9.6.1",
     "@types/node": "^25.0.3",
     "@types/update-notifier": "^6.0.8",
     "dotenv-cli": "^11.0.0",
     "eslint": "^9.39.2",
-    "eslint-plugin-perfectionist": "^5.0.0",
+    "eslint-plugin-perfectionist": "^5.1.0",
     "husky": "^9.1.7",
     "prettier": "^3.7.4",
     "tempy": "^3.1.0",
     "ts-node": "^10.9.2",
-    "tsdown": "^0.18.1",
+    "tsdown": "^0.18.3",
     "typescript": "^5.9.3",
     "vite-tsconfig-paths": "^6.0.3",
     "vitest": "^4.0.16"
   },
-  "packageManager": "pnpm@10.26.1+sha512.664074abc367d2c9324fdc18037097ce0a8f126034160f709928e9e9f95d98714347044e5c3164d65bd5da6c59c6be362b107546292a8eecb7999196e5ce58fa"
+  "packageManager": "pnpm@10.26.2+sha512.0e308ff2005fc7410366f154f625f6631ab2b16b1d2e70238444dd6ae9d630a8482d92a451144debc492416896ed16f7b114a86ec68b8404b2443869e68ffda6"
 }
