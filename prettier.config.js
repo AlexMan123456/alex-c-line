@@ -1,3 +1,3 @@
-import { prettierRules } from "@alextheman/eslint-plugin";
+import { prettierConfig } from "@alextheman/eslint-plugin";
 
-export default prettierRules;
+export default prettierConfig;

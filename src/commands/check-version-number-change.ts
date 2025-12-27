@@ -1,5 +1,6 @@
 import type { Command } from "commander";
 
+import { normaliseIndents } from "@alextheman/utility";
 import { execa } from "execa";
 
 import { readFile } from "node:fs/promises";
@@ -24,7 +25,7 @@ function checkVersionNumberChange(program: Command) {
       ]);
       if (exitCode === 0) {
         console.info("No source code changes found. Version does not need changing.");
-        process.exit(0);
+        return;
       }
 
       const { stdout: packageContents } = await execa`git show origin/main:package.json`;
@@ -41,17 +42,15 @@ function checkVersionNumberChange(program: Command) {
       const newPatchVersion = `${currentBranchMajor}.${currentBranchMinor}.${parseInt(currentBranchPatch) + 1}`;
 
       if (mainPackageVersion === currentBranchPackageVersion) {
-        console.error("❌ Version needs updating. Please run one of the following:");
-        console.error(
-          `- npm version major -m "Change version number to v%s" (v${mainPackageVersion} -> v${newMajorVersion})`,
+        program.error(
+          normaliseIndents`
+            ❌ Version needs updating. Please run one of the following:
+            - npm version major -m "Change version number to v%s" (v${mainPackageVersion} -> v${newMajorVersion})
+            - npm version minor -m "Change version number to v%s" (v${mainPackageVersion} -> v${newMinorVersion})
+            - npm version patch -m "Change version number to v%s" (v${mainPackageVersion} -> v${newPatchVersion})
+          `,
+          { exitCode: 1, code: "VERSION_NEEDS_UPDATING" },
         );
-        console.error(
-          `- npm version minor -m "Change version number to v%s" (v${mainPackageVersion} -> v${newMinorVersion})`,
-        );
-        console.error(
-          `- npm version patch -m "Change version number to v%s" (v${mainPackageVersion} -> v${newPatchVersion})`,
-        );
-        process.exit(1);
       }
 
       console.info("Version has been updated!");
