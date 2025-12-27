@@ -52,12 +52,13 @@ function checkForFileDependencies(program: Command) {
       }
 
       if (Object.keys(allFileDependencies).length !== 0) {
-        console.error("ERROR: File dependencies found:");
-        console.error(JSON.stringify(allFileDependencies, undefined, 2));
-        process.exit(1);
+        program.error(
+          `ERROR: File dependencies found:\n\n${JSON.stringify(allFileDependencies, undefined, 2)}
+          `,
+          { exitCode: 1, code: "FILE_DEPENDENCIES_FOUND" },
+        );
       }
       console.info("No file dependencies found!");
-      process.exit(0);
     });
 }
 

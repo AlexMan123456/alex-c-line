@@ -19,8 +19,10 @@ function setReleaseStatus(program: Command) {
         await readFile(path.join(process.cwd(), "package.json"), "utf-8"),
       );
       if (!documentPath.endsWith("md")) {
-        console.error("❌ ERROR: Invalid file path. Path must lead to a .md file.");
-        process.exit(1);
+        program.error("❌ ERROR: Invalid file path. Path must lead to a .md file.", {
+          exitCode: 1,
+          code: "INVALID_FILE_PATH",
+        });
       }
 
       const pathParts = documentPath.split("/");
@@ -36,8 +38,10 @@ function setReleaseStatus(program: Command) {
       const initialDocument = await readFile(fullDocumentPath, "utf-8");
 
       if (!isValidReleaseDocument(packageName, versionNumber, initialDocument)) {
-        console.error("❌ ERROR: Document does not match a valid release note template.");
-        process.exit(1);
+        program.error("❌ ERROR: Document does not match a valid release note template.", {
+          exitCode: 1,
+          code: "INVALID_RELEASE_NOTE",
+        });
       }
 
       const newDocument = initialDocument.replace(

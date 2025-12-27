@@ -37,8 +37,10 @@ function createReleaseNote(program: Command) {
         await writeFile(fullReleaseNotePath, releaseNoteTemplate, { flag: "wx" });
       } catch (error) {
         if (error instanceof Error && "code" in error && error.code === "EEXIST") {
-          console.error("❌ ERROR: Release notes already exist.");
-          process.exit(1);
+          program.error("❌ ERROR: Release notes already exist.", {
+            exitCode: 1,
+            code: "RELEASE_NOTE_EXISTS",
+          });
         } else {
           throw error;
         }
