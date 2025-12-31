@@ -6,7 +6,7 @@ import {
   getMajorReleaseSummary,
   getMinorReleaseSummary,
   getPatchReleaseSummary,
-} from "src/utils/getReleaseSummary";
+} from "src/utility/getReleaseSummary";
 
 export type ReleaseStatus = "In progress" | "Released";
 

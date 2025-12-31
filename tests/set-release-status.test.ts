@@ -8,8 +8,8 @@ import path from "node:path";
 
 import { createAlexCLineTestClientInDirectory } from "tests/test-clients/alex-c-line-test-client";
 
-import getReleaseNoteTemplate from "src/utils/getReleaseNoteTemplate";
-import getReleaseSummary, { getMajorReleaseSummary } from "src/utils/getReleaseSummary";
+import getReleaseNoteTemplate from "src/utility/getReleaseNoteTemplate";
+import getReleaseSummary, { getMajorReleaseSummary } from "src/utility/getReleaseSummary";
 
 import { name, version } from "package.json" with { type: "json" };
 

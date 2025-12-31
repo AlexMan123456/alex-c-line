@@ -3,19 +3,21 @@ import type { Command } from "commander";
 import checkForFileDependencies from "src/commands/check-for-file-dependencies";
 import checkLockfileVersionDiscrepancy from "src/commands/check-lockfile-version-discrepancy";
 import checkVersionNumberChange from "src/commands/check-version-number-change";
+import createPullRequestTemplates from "src/commands/create-pull-request-templates";
 import createReleaseNote from "src/commands/create-release-note";
 import editEnv from "src/commands/edit-env";
 import gitPostMergeCleanup from "src/commands/git-post-merge-cleanup";
 import incrementVersion from "src/commands/increment-version";
 import sayHello from "src/commands/say-hello";
 import setReleaseStatus from "src/commands/set-release-status";
-import loadCommands from "src/utils/loadCommands";
+import loadCommands from "src/utility/loadCommands";
 
 function createCommands(program: Command) {
   loadCommands(program, {
     checkForFileDependencies,
     checkLockfileVersionDiscrepancy,
     checkVersionNumberChange,
+    createPullRequestTemplates,
     createReleaseNote,
     editEnv,
     gitPostMergeCleanup,
