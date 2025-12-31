@@ -9,7 +9,7 @@ import gitPostMergeCleanup from "src/commands/git-post-merge-cleanup";
 import incrementVersion from "src/commands/increment-version";
 import sayHello from "src/commands/say-hello";
 import setReleaseStatus from "src/commands/set-release-status";
-import loadCommands from "src/utils/loadCommands";
+import loadCommands from "src/utility/loadCommands";
 
 function createCommands(program: Command) {
   loadCommands(program, {

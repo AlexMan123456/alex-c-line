@@ -2,7 +2,7 @@ import type { VersionNumber } from "@alextheman/utility";
 
 import { kebabToCamel, normaliseIndents } from "@alextheman/utility";
 
-import getReleaseSummary from "src/utils/getReleaseSummary";
+import getReleaseSummary from "src/utility/getReleaseSummary";
 
 function isValidReleaseDocument(
   packageName: string,

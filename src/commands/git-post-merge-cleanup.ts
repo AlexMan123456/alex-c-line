@@ -6,7 +6,7 @@ import { readFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 
-import { createExecaClientWithDefaultOptions } from "src/utils/execa-helpers";
+import { createExecaClientWithDefaultOptions } from "src/utility/execa-helpers";
 
 interface Options {
   rebase?: boolean;
