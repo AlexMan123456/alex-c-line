@@ -3,6 +3,7 @@ import type { Command } from "commander";
 import checkForFileDependencies from "src/commands/check-for-file-dependencies";
 import checkLockfileVersionDiscrepancy from "src/commands/check-lockfile-version-discrepancy";
 import checkVersionNumberChange from "src/commands/check-version-number-change";
+import createPullRequestTemplates from "src/commands/create-pull-request-templates";
 import createReleaseNote from "src/commands/create-release-note";
 import editEnv from "src/commands/edit-env";
 import gitPostMergeCleanup from "src/commands/git-post-merge-cleanup";
@@ -16,6 +17,7 @@ function createCommands(program: Command) {
     checkForFileDependencies,
     checkLockfileVersionDiscrepancy,
     checkVersionNumberChange,
+    createPullRequestTemplates,
     createReleaseNote,
     editEnv,
     gitPostMergeCleanup,
