@@ -6,6 +6,7 @@ import checkVersionNumberChange from "src/commands/check-version-number-change";
 import createPullRequestTemplates from "src/commands/create-pull-request-templates";
 import createReleaseNote from "src/commands/create-release-note";
 import editEnv from "src/commands/edit-env";
+import getVersionType from "src/commands/get-version-type";
 import gitPostMergeCleanup from "src/commands/git-post-merge-cleanup";
 import incrementVersion from "src/commands/increment-version";
 import sayHello from "src/commands/say-hello";
@@ -20,6 +21,7 @@ function createCommands(program: Command) {
     createPullRequestTemplates,
     createReleaseNote,
     editEnv,
+    getVersionType,
     gitPostMergeCleanup,
     incrementVersion,
     sayHello,
