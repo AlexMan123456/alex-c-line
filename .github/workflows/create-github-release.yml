@@ -1,0 +1,16 @@
+name: Create GitHub Release
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  create-github-release:
+    if: ${{ github.repository == 'AlexMan123456/utility' }}
+    uses: AlexMan123456/github-actions/.github/workflows/create-github-release.yml@211c7edd00fad6b39898548e93b541bef07d25e4 # v4.0.3
+    secrets:
+      PAT_GITHUB: ${{ secrets.PAT_GITHUB }}
