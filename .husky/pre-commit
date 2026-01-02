@@ -1,14 +1,4 @@
 #!/bin/bash
 set -e
 
-if git diff --cached --quiet; then
-  echo "No staged changes found."
-  exit 0
-fi
-
-pnpm run build
-pnpm run format
-pnpm run lint
-pnpm test
-
-git update-index --again
+pnpm run pre-commit
