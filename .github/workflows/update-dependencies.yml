@@ -11,6 +11,6 @@ permissions:
 jobs:
   update-dependencies:
     if: ${{ github.repository == 'AlexMan123456/alex-c-line' }}
-    uses: AlexMan123456/github-actions/.github/workflows/update-dependencies.yml@134246f0ec5c5b7efad0b3e332a68c387132b84f # v3.1.2
+    uses: AlexMan123456/github-actions/.github/workflows/update-dependencies.yml@211c7edd00fad6b39898548e93b541bef07d25e4 # v4.0.3
     secrets:
       PAT_GITHUB: ${{ secrets.PAT_GITHUB }}
