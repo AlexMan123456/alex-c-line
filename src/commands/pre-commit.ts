@@ -3,6 +3,7 @@ import type { Command } from "commander";
 import { execaNoFail } from "src/utility/execa-helpers";
 
 interface PreCommitOptions {
+  build?: boolean;
   tests?: boolean;
 }
 
@@ -10,8 +11,9 @@ function preCommit(program: Command) {
   program
     .command("pre-commit")
     .description("Run the standard pre-commits used across all my repositories.")
+    .option("--no-build", "Skip the build")
     .option("--no-tests", "Skip the tests")
-    .action(async ({ tests: shouldIncludeTests }: PreCommitOptions) => {
+    .action(async ({ build: shouldIncludeBuild, tests: shouldIncludeTests }: PreCommitOptions) => {
       const { exitCode: diffExitCode } = await execaNoFail("git", ["diff", "--cached", "--quiet"]);
 
       switch (diffExitCode) {
@@ -40,7 +42,9 @@ function preCommit(program: Command) {
         return result;
       }
 
-      await runCommandAndLogToConsole("pnpm", ["run", "build"]);
+      if (shouldIncludeBuild) {
+        await runCommandAndLogToConsole("pnpm", ["run", "build"]);
+      }
       await runCommandAndLogToConsole("pnpm", ["run", "format"]);
       await runCommandAndLogToConsole("pnpm", ["run", "lint"]);
       if (shouldIncludeTests) {
