@@ -9,6 +9,14 @@
   "license": "ISC",
   "author": "alextheman",
   "type": "module",
+  "exports": {
+    "./configs": {
+      "types": "./dist/configs/index.d.ts",
+      "require": "./dist/configs/index.cjs",
+      "import": "./dist/configs/index.js",
+      "default": "./dist/configs/index.js"
+    }
+  },
   "main": "dist/index.js",
   "module": "dist/index.cjs",
   "types": "dist/index.d.ts",
