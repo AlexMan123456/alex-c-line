@@ -1,4 +1,4 @@
-name: publish npm
+name: Publish to NPM Registry
 
 permissions:
   id-token: write
