@@ -1,3 +1,3 @@
-import { selfConfig } from "./dist/configs/index";
+import { internalConfig } from "./dist/configs/index.js";
 
-export default selfConfig;
+export default internalConfig;

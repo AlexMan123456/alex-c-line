@@ -43,7 +43,7 @@
     "lint-prettier-javascript": "prettier --check \"./**.js\"",
     "lint-prettier-typescript": "prettier --check --parser typescript \"./**/*.ts\"",
     "lint-tsc": "tsc --noEmit",
-    "pre-commit": "pnpm run command pre-commit --no-build",
+    "pre-commit": "pnpm run command pre-commit",
     "prepare": "husky",
     "prepare-live-eslint-plugin": "pnpm uninstall @alextheman/eslint-plugin && pnpm install --save-dev @alextheman/eslint-plugin",
     "prepare-live-utility": "pnpm uninstall @alextheman/utility && pnpm install @alextheman/utility",
