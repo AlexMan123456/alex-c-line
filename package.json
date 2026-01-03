@@ -9,6 +9,14 @@
   "license": "ISC",
   "author": "alextheman",
   "type": "module",
+  "exports": {
+    "./configs": {
+      "types": "./dist/configs/index.d.ts",
+      "require": "./dist/configs/index.cjs",
+      "import": "./dist/configs/index.js",
+      "default": "./dist/configs/index.js"
+    }
+  },
   "main": "dist/index.js",
   "module": "dist/index.cjs",
   "types": "dist/index.d.ts",
@@ -35,7 +43,7 @@
     "lint-prettier-javascript": "prettier --check \"./**.js\"",
     "lint-prettier-typescript": "prettier --check --parser typescript \"./**/*.ts\"",
     "lint-tsc": "tsc --noEmit",
-    "pre-commit": "pnpm run command pre-commit --no-build",
+    "pre-commit": "pnpm run command pre-commit",
     "prepare": "husky",
     "prepare-live-eslint-plugin": "pnpm uninstall @alextheman/eslint-plugin && pnpm install --save-dev @alextheman/eslint-plugin",
     "prepare-live-utility": "pnpm uninstall @alextheman/utility && pnpm install @alextheman/utility",

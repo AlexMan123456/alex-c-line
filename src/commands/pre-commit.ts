@@ -3,102 +3,119 @@ import type { Command } from "commander";
 import { DataError, parseZodSchema } from "@alextheman/utility";
 import z from "zod";
 
+import { readFile } from "node:fs/promises";
+import path from "node:path";
+
+import { PackageManager } from "src/configs/types/PreCommitConfig";
+import loadAlexCLineConfig from "src/utility/configLoaders/loadAlexCLineConfig";
 import { execaNoFail } from "src/utility/execa-helpers";
+import findAlexCLineConfig from "src/utility/findAlexCLineConfig";
 
 interface PreCommitOptions {
-  build?: boolean;
-  tests?: boolean;
-  allowUnstaged?: boolean;
-  repositoryManager?: string;
+  allowNoStagedChanges?: boolean;
 }
 
 function preCommit(program: Command) {
   program
     .command("pre-commit")
     .description("Run the standard pre-commits used across all my repositories.")
-    .option("--no-build", "Skip the build")
-    .option("--no-tests", "Skip the tests")
-    .option("--allow-unstaged", "Run even if nothing is staged")
-    .option(
-      "--repository-manager <repositoryManager>",
-      "The repository manager if it is a monorepo (Only Turborepo is supported as of now)",
-    )
-    .action(
-      async ({
-        build: shouldIncludeBuild,
-        tests: shouldIncludeTests,
-        allowUnstaged,
-        repositoryManager: rawRepositoryManager,
-      }: PreCommitOptions) => {
-        const repositoryManager = rawRepositoryManager
-          ? parseZodSchema(
-              z.enum(["turborepo"]),
-              rawRepositoryManager?.toLowerCase(),
-              new DataError(
-                rawRepositoryManager,
-                "INVALID_REPOSITORY_MANAGER",
-                "The repository manager provided does not exist or is not currently supported. We currently support the following: `turborepo`.",
-              ),
-            )
-          : undefined;
+    .option("--allow-no-staged-changes", "Run even if nothing is staged")
+    .action(async ({ allowNoStagedChanges }: PreCommitOptions) => {
+      const configPath = await findAlexCLineConfig(process.cwd());
+      if (!configPath) {
+        program.error("Could not find the path to the alex-c-line config file. Does it exist?", {
+          exitCode: 1,
+          code: "ALEX_C_LINE_CONFIG_NOT_FOUND",
+        });
+      }
+      const { preCommit: preCommitConfig } = await loadAlexCLineConfig(configPath);
 
-        const { exitCode: diffExitCode } = await execaNoFail("git", [
-          "diff",
-          "--cached",
-          "--quiet",
-        ]);
+      if (!preCommitConfig) {
+        program.error("Could not find the pre-commit config in alex-c-line config.", {
+          exitCode: 1,
+          code: "PRE_COMMIT_CONFIG_NOT_FOUND",
+        });
+      }
 
-        switch (diffExitCode) {
-          case 128:
-            program.error("Not currently in a Git repository", {
-              exitCode: 1,
-              code: "GIT_DIFF_FAILED",
-            });
-          // program.error() will throw an error and stop the program, so it is redundant to include a break here.
-          // eslint-disable-next-line no-fallthrough
-          case 0:
-            if (allowUnstaged) {
-              break;
-            }
-            console.info("No staged changes found. Use --allow-unstaged to run anyway.");
-            return;
-        }
+      const { exitCode: diffExitCode } = await execaNoFail("git", ["diff", "--cached", "--quiet"]);
 
-        async function runCommandAndLogToConsole(command: string, args?: string[] | undefined) {
-          const newArguments = [...(args ?? [])];
-
-          if (repositoryManager === "turborepo") {
-            newArguments.push("--ui=stream");
+      switch (diffExitCode) {
+        case 128:
+          program.error("Not currently in a Git repository", {
+            exitCode: 1,
+            code: "GIT_DIFF_FAILED",
+          });
+        // program.error() will throw an error and stop the program, so it is redundant to include a break here.
+        // eslint-disable-next-line no-fallthrough
+        case 0:
+          if (allowNoStagedChanges ?? preCommitConfig.allowNoStagedChanges) {
+            break;
           }
-          const result = await execaNoFail(command, newArguments, { stdio: "inherit" });
+          console.info("No staged changes found. Use --allow-no-staged-changes to run anyway.");
+          return;
+      }
 
-          if (result.exitCode !== 0) {
-            program.error(
-              `Command failed: ${command}${newArguments.length ? ` ${newArguments.join(" ")}` : ""}`,
-              {
-                exitCode: result.exitCode ?? 1,
-                code: "PRE_COMMIT_FAILED",
-              },
-            );
-          }
+      async function runCommandAndLogToConsole(command: string, args?: string[] | undefined) {
+        const result = await execaNoFail(command, args, { stdio: "inherit" });
 
-          return result;
+        if (result.exitCode !== 0) {
+          program.error(`Command failed: ${command}${args?.length ? ` ${args.join(" ")}` : ""}`, {
+            exitCode: result.exitCode ?? 1,
+            code: "PRE_COMMIT_FAILED",
+          });
         }
 
-        if (shouldIncludeBuild) {
-          await runCommandAndLogToConsole("pnpm", ["run", "build"]);
+        return result;
+      }
+
+      const { packageManager: packagePackageManager, scripts } = JSON.parse(
+        await readFile(path.join(process.cwd(), "package.json"), "utf8"),
+      );
+      const rawPackageManager =
+        preCommitConfig.packageManager ??
+        (typeof packagePackageManager === "string"
+          ? packagePackageManager.split("@")[0]
+          : undefined);
+
+      const packageManager = parseZodSchema(
+        z.enum(PackageManager),
+        rawPackageManager,
+        new DataError(
+          rawPackageManager,
+          "UNSUPPORTED_PACKAGE_MANAGER",
+          `This repository manager is not currently supported. Only the following are supported: ${Object.values(PackageManager).join(", ")}`,
+        ),
+      );
+
+      function getCommandArguments(script: string, args?: string[]): string[] {
+        if (!(script in (scripts ?? {}))) {
+          program.error(`Could not find script \`${script}\` in package.json.`, {
+            exitCode: 1,
+            code: "SCRIPT_NOT_FOUND",
+          });
         }
-        await runCommandAndLogToConsole("pnpm", ["run", "format"]);
-        await runCommandAndLogToConsole("pnpm", ["run", "lint"]);
-        if (shouldIncludeTests) {
-          await runCommandAndLogToConsole("pnpm", ["test"]);
+        const result = script === "test" ? [script] : ["run", script];
+
+        if (args) {
+          result.push(...args);
         }
 
-        if (diffExitCode === 1) {
-          await execaNoFail("git", ["update-index", "--again"]);
+        return result;
+      }
+
+      for (const step of preCommitConfig.steps) {
+        if (typeof step === "string") {
+          await runCommandAndLogToConsole(packageManager, [...getCommandArguments(step)]);
+        } else {
+          const [script, options] = step;
+          await runCommandAndLogToConsole(packageManager, [
+            ...getCommandArguments(script, options.arguments),
+          ]);
         }
-      },
-    );
+      }
+
+      await execaNoFail("git", ["update-index", "--again"]);
+    });
 }
 
 export default preCommit;
