@@ -1,6 +1,6 @@
 import path from "node:path";
 
-import ConfigFileName from "src/configs/ConfigFileName";
+import ConfigFileName from "src/configs/types/ConfigFileName";
 import doesFileExist from "src/utility/doesFileExist";
 
 async function findAlexCLineConfig(cwd: string): Promise<string | undefined> {

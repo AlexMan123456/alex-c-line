@@ -1,4 +1,4 @@
-import type { PreCommitPrivateConfig } from "src/configs/PreCommitConfig";
+import type { PreCommitPrivateConfig } from "src/configs/types/PreCommitConfig";
 
 function definePreCommitPrivateConfig<ScriptName extends string = string>(
   config: PreCommitPrivateConfig<ScriptName>,

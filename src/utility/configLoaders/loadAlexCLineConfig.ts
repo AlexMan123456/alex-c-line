@@ -1,4 +1,4 @@
-import type { AlexCLineConfig } from "src/configs/AlexCLineConfig";
+import type { AlexCLineConfig } from "src/configs/types/AlexCLineConfig";
 
 import { createRequire } from "node:module";
 import { pathToFileURL } from "node:url";

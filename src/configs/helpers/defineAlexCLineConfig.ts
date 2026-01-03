@@ -1,4 +1,4 @@
-import type { AlexCLineConfig } from "src/configs/AlexCLineConfig";
+import type { AlexCLineConfig } from "src/configs/types/AlexCLineConfig";
 
 function defineAlexCLineConfig<ScriptName extends string = string>(
   config: AlexCLineConfig<ScriptName>,
