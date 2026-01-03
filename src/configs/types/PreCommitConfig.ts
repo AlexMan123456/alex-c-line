@@ -20,8 +20,3 @@ export interface PreCommitConfig<ScriptName extends string = string> {
   /** The steps to run in the pre-commit hook. */
   steps: ScriptName[] | [ScriptName, PreCommitStepOptions][];
 }
-
-export interface PreCommitPrivateConfig<ScriptName extends string = string> {
-  /** List of script names to skip */
-  disableSteps?: ScriptName[];
-}
