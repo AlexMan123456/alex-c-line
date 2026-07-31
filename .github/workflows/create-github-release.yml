@@ -9,7 +9,7 @@ permissions:
 jobs:
   create-github-release:
     if: ${{ github.repository == 'alextheman231/alex-c-line' }}
-    uses: alextheman231/github-actions/.github/workflows/create-github-release.yml@aa8a3ef9f3e8d4e820402e4f6bf811af5298c3a9 # v12.4.1
+    uses: alextheman231/github-actions/.github/workflows/create-github-release.yml@2b88b428425b25d437ecf743fc320528a9a25f4a # v12.5.0
     with:
       node-version: 26
     secrets:
