@@ -74,8 +74,8 @@
     "use-local-utility": "pnpm run prepare-local-utility"
   },
   "dependencies": {
-    "@alextheman/utility": "5.27.0",
-    "@inquirer/prompts": "8.5.2",
+    "@alextheman/utility": "5.28.0",
+    "@inquirer/prompts": "8.6.0",
     "axios": "1.19.0",
     "boxen": "8.0.1",
     "chalk": "6.0.0",
@@ -94,7 +94,7 @@
   "devDependencies": {
     "@alextheman/eslint-plugin": "5.18.1",
     "@commander-js/extra-typings": "15.0.0",
-    "@faker-js/faker": "10.5.0",
+    "@faker-js/faker": "10.6.0",
     "@types/eslint": "9.6.1",
     "@types/node": "26.2.0",
     "@types/semver": "7.8.0",
@@ -111,8 +111,8 @@
     "tsx": "4.23.12",
     "typescript": "6.0.3",
     "typescript-eslint": "8.67.0",
-    "vite": "8.2.1",
-    "vitest": "4.1.10"
+    "vite": "8.2.2",
+    "vitest": "4.1.11"
   },
   "packageManager": "pnpm@11.22.0+sha512.1ff870c4c6133dfd88fb2afc46dd13d47f09c9794b438c6fdb47ca98caf3bc16381ee0be93a091b8e3824cf01f889f46d7d9e20910fb0be1ab0fb5baa80dd621",
   "engines": {
