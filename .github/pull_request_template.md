@@ -1,16 +1,7 @@
 # Select a Template
 
-Please select the option that best describes your changes to `alex-c-line`:
+Please select a risk level:
 
-- [Breaking Change](?template=breaking_change.md) - For changes that have a substantial effect on how the package is used and/or deployed.
-- [New Feature](?template=new_feature.md) - For changes that add a new feature to the package.
-- [Bug Fix](?template=bug_fix.md) - For changes that fix a bug in the package.
-- [Tooling Change](?template=tooling_change.md) - For changes to the package's tooling (dependencies, devDependencies, configs...).
-- [Documentation Change](?template=documentation_change.md) - For changes that affect the way that information about the package is presented to users.
-- [Internal Change](?template=internal_change.md) - For changes to internal features that are technically accessible but not recommended for public usage.
-- [Refactor](?template=refactor.md) - For changes that improve code quality and structure without affecting user-facing behaviour.
-- [Miscellaneous](?template=miscellaneous.md) - For changes that do not fit cleanly into any of the above categories.
-
-In some cases, your pull request may be doing more than one of these. In that case, please select a template from the top-down.
-For example, if you are introducing a new feature but also making changes to tooling, please select `New Feature` as that comes before tooling in the list.
-This ensures that the most impactful aspect of the change is reflected.
+- [Low risk](?template=low_risk.md) - For simple additions and refactors that are unlikely to affect consumers of the package.
+- [Medium risk](?template=medium_risk.md) - For changes that alter existing behaviour but should not require a refactor on the consumer's part.
+- [High risk](?template=high_risk.md) - For changes that require consumers to refactor their code as a result of the release.
